@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.quest</groupId>
-	<artifactId>web_quest</artifactId>
+	<artifactId>quest_web</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>web_quest</name>
+	<name>quest_web_java</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
