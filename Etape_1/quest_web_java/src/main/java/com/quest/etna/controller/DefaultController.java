@@ -14,7 +14,7 @@ public class DefaultController {
     }
 
     @RequestMapping("/testNotFound")
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String testNotFound(){
         return "not found";
     }
