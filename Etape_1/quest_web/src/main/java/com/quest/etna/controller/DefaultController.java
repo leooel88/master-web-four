@@ -10,7 +10,7 @@ public class DefaultController {
     @RequestMapping("/testSuccess")
     @ResponseStatus(HttpStatus.OK)
     public String testSuccess(){
-        return "succes";
+        return "success";
     }
 
     @RequestMapping("/testNotFound")
@@ -25,4 +25,3 @@ public class DefaultController {
         return "error";
     }
 }
-
