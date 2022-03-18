@@ -1,10 +1,10 @@
-package com.quest.web_quest;
+package com.quest.quest_web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WebQuestApplicationTests {
+class QuestWebApplicationTests {
 
 	@Test
 	void contextLoads() {
