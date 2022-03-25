@@ -1,24 +1,25 @@
 package com.quest.etna.model;
 
-import java.sql.Date;
+import java.util.Date;
 
-import javax.persistence.Entity;
+import java.lang.String;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    private int id;
 
-    @Column(name="username")
+    @Column(name="username", length = 255, nullable = false, unique = true)
     private String username;
 
-    @Column(name="password")
+    @Column(name="password", length = 255, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="role")
+    @Column(name="role", length = 255)
     private UserRole role = UserRole.ROLE_USER;
     public enum UserRole {
         ROLE_USER,
@@ -31,7 +32,12 @@ public class User {
     @Column(name="update_date")
     private Date updatedDate;
 
+    public User(){
+        super();
+    }
+
     public User(String username, String password) {
+        super();
         this.username = username;
         this.password = password;
         this.role = UserRole.ROLE_USER;
@@ -39,7 +45,7 @@ public class User {
         this.updatedDate = new Date();
     }
 
-    public Long getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -63,7 +69,7 @@ public class User {
         return this.updatedDate;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -93,17 +99,15 @@ public class User {
             "User[username=%d, password='%s']", this.username, this.password);
     }
 
-    @Override
     public boolean equals(User user) {
-        return (!user.getId().equals(this.id) || !user.getUsername().equals(this.username) || !user.getPassword().equals(this.password) || user.getRole() != this.role);
+        return (user.getId() != this.id || !user.getUsername().equals(this.username) || !user.getPassword().equals(this.password) || user.getRole() != this.role);
     }
 
-    @Override
     public int hashCode() {
-        int hash = 1;
+        long hash = 1;
         hash = hash * 17 + this.id;
         hash = hash * 31 + this.username.hashCode();
         hash = hash * 13 + this.password.hashCode();
-        return hash;
+        return (int)hash;
     }
 }
