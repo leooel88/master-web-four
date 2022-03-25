@@ -29,7 +29,7 @@ public class User {
     @Column(name="creation_date")
     private Date creationDate;
 
-    @Column(name="update_date")
+    @Column(name="updated_date")
     private Date updatedDate;
 
     public User(){
