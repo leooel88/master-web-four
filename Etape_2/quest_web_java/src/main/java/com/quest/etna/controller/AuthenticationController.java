@@ -1,5 +1,6 @@
 package com.quest.etna.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -7,7 +8,6 @@ import javax.annotation.PostConstruct;
 import com.quest.etna.model.User;
 import com.quest.etna.model.UserDetails;
 import com.quest.etna.repositories.UserRepository;
-import com.quest.etna.responses.ResponseHandler;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,18 +35,37 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @ResponseBody
     public ResponseEntity<Object> create(@RequestBody Map<String, String> body){
         String username = body.get("username");
         String password = body.get("password");
 
         if (username == null || username == "" || password == null || password == "") {
-            return ResponseHandler.generateResponse("Error : username or password is missing !", HttpStatus.BAD_REQUEST, null);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "Username or password is missing !");
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
         else if (userRepository.findFirstByUsernameIgnoreCase(username) != null) {
-            return ResponseHandler.generateResponse("Error : this username has already been used !", HttpStatus.CONFLICT, null);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "This username has already been used !");
+            return new ResponseEntity<Object>(map, HttpStatus.CONFLICT);
         }
-        User savingResponse = userRepository.save(new User(username, password));
-        UserDetails userDetails = new UserDetails(savingResponse);
-        return ResponseHandler.generateResponse(null, HttpStatus.CREATED, userDetails);
+        try {
+            User savingResponse = userRepository.save(new User(username, password));
+            if (savingResponse == null) {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("Error", "User couldn't be created");
+                return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+            }
+            UserDetails userDetails = new UserDetails(savingResponse);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("username", userDetails.getUsername());
+            map.put("role", userDetails.getRole().toString());
+            return new ResponseEntity<Object>(map, HttpStatus.CREATED);
+        } catch(Exception e) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", e.toString());
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
     }
 }
