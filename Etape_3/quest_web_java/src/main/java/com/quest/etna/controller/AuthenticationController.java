@@ -49,6 +49,21 @@ public class AuthenticationController {
 
     @Autowired
 	private AuthenticationManager authenticationManager;
+    
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> body) throws Exception {
+        String username = body.get("username");
+        String password = body.get("password");
+
+		authenticate(username, password);
+
+		final JwtUserDetails userDetails = jwtUserDetailsService
+				.loadUserByUsername(username);
+
+		final String token = jwtUtils.generateToken(userDetails);
+
+		return ResponseEntity.ok(token);
+	}
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
@@ -86,8 +101,8 @@ public class AuthenticationController {
     }
 
     public HashMap<String, String> authenticate(String username, String password){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        System.out.println(authentication);
+        System.out.println("ICIIII COUCOU");
+        System.out.println(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)));
         final JwtUserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
         final String jwtToken = jwtUtils.generateToken(userDetails);
 
