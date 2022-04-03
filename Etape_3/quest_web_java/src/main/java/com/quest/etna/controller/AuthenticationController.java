@@ -102,12 +102,7 @@ public class AuthenticationController {
             map.put("Error", "Couldn't log in !");
             return new ResponseEntity<Object>(map, HttpStatus.UNAUTHORIZED);
         }
-        final JwtUserDetails userDetails = jwtUserDetailsService
-                .loadUserByUsername(username);
-
-        final String token = jwtUtils.generateToken(userDetails);
-
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(authentication);
     }
 
     public HashMap<String, String> authenticate(String username, String password) {
