@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.quest"})
-@EntityScan(basePackages = {"com.quest.etna.model"})
+@EntityScan(basePackages = {"com.quest.etna"})
 public class QuestWebJavaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QuestWebJavaApplication.class, args);

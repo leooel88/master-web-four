@@ -22,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -86,34 +87,6 @@ public class AuthenticationController {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", e.toString());
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequestMapping(value = "/me", method = RequestMethod.GET)
-    public ResponseEntity<?> readUserDetails(@RequestBody Map<String, String> body) throws Exception {
-        JwtUserDetails userDetails = null;
-        try {
-            userDetails = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal();
-        } catch(Exception e) {
-            System.out.println(e.toString());
-        }
-        
-        if (userDetails == null) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "User not logged in !");
-            return new ResponseEntity<Object>(map, HttpStatus.UNAUTHORIZED);
-        }
-        String username = userDetails.getUsername();
-        User user = userRepo.findFirstByUsernameIgnoreCase(username);
-        if (user != null) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Userdetails", userDetails.toString());
-            return new ResponseEntity<Object>(map, HttpStatus.OK);
-        } else {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "User not logged in !");
-            return new ResponseEntity<Object>(map, HttpStatus.UNAUTHORIZED);
         }
     }
     
