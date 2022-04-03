@@ -19,7 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-// import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,6 +43,9 @@ public class AuthenticationController {
 
     @Autowired
 	JwtTokenUtil jwtUtils;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
 	private JwtUserDetailsService jwtUserDetailsService;
@@ -67,7 +71,7 @@ public class AuthenticationController {
             return new ResponseEntity<Object>(map, HttpStatus.CONFLICT);
         }
         try {
-            User savingResponse = userRepository.save(new User(username, password));
+            User savingResponse = userRepository.save(new User(username, passwordEncoder.encode(password)));
             if (savingResponse == null) {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("Error", "User couldn't be created");
@@ -82,6 +86,34 @@ public class AuthenticationController {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", e.toString());
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/me", method = RequestMethod.GET)
+    public ResponseEntity<?> readUserDetails(@RequestBody Map<String, String> body) throws Exception {
+        JwtUserDetails userDetails = null;
+        try {
+            userDetails = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal();
+        } catch(Exception e) {
+            System.out.println(e.toString());
+        }
+        
+        if (userDetails == null) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "User not logged in !");
+            return new ResponseEntity<Object>(map, HttpStatus.UNAUTHORIZED);
+        }
+        String username = userDetails.getUsername();
+        User user = userRepo.findFirstByUsernameIgnoreCase(username);
+        if (user != null) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Userdetails", userDetails.toString());
+            return new ResponseEntity<Object>(map, HttpStatus.OK);
+        } else {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "User not logged in !");
+            return new ResponseEntity<Object>(map, HttpStatus.UNAUTHORIZED);
         }
     }
     
@@ -121,7 +153,6 @@ public class AuthenticationController {
     
             res.put("token", jwtToken);
         }
-        System.out.println(res.toString());
         return res;
     }
 }

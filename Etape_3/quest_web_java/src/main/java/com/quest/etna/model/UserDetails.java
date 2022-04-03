@@ -32,4 +32,8 @@ public class UserDetails {
         this.role = role;
     }
 
+    public String toString() {
+        return "Username : " + this.username + "; User role : " + this.role.toString(); 
+    }
+
 }

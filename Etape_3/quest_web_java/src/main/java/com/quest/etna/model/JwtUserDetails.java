@@ -53,7 +53,7 @@ public class JwtUserDetails implements UserDetails{
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
@@ -69,6 +69,10 @@ public class JwtUserDetails implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String toString() {
+        return "Username : " + this.username + "; User role : " + this.role.toString(); 
     }
     
 }
