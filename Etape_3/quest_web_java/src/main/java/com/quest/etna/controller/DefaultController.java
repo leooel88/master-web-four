@@ -29,11 +29,5 @@ public class DefaultController {
         return "error";
     }
     
-    @RequestMapping(value = "/me")
-    @ResponseStatus(HttpStatus.OK)
-    public String me(){
-        JwtUserDetails userDetails = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication()
-                        .getPrincipal();
-        return userDetails.toString();
-    }
+
 }
