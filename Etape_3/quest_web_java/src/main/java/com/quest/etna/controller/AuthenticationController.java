@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -72,7 +73,7 @@ public class AuthenticationController {
             return new ResponseEntity<Object>(map, HttpStatus.CONFLICT);
         }
         try {
-            User savingResponse = userRepository.save(new User(username, passwordEncoder.encode(password)));
+            User savingResponse = userRepository.save(new User(username.toLowerCase(), passwordEncoder.encode(password.toLowerCase())));
             if (savingResponse == null) {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("Error", "User couldn't be created");
@@ -113,7 +114,7 @@ public class AuthenticationController {
         boolean authenticationWorked = true;
         HashMap<String, String> res = new HashMap<String, String>();
         try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username.toLowerCase(), password.toLowerCase()));
 		} catch (Exception e) {
             System.out.println(e.toString());
             authenticationWorked = false;
@@ -127,5 +128,13 @@ public class AuthenticationController {
             res.put("token", jwtToken);
         }
         return res;
+    }
+
+    @RequestMapping(value = "/me")
+    @ResponseStatus(HttpStatus.OK)
+    public String me(){
+        JwtUserDetails userDetails = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication()
+                        .getPrincipal();
+        return userDetails.toString();
     }
 }
