@@ -10,8 +10,8 @@ import com.quest.etna.model.JwtUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-@Component 
 
+@Component
 public class JwtTokenUtil implements Serializable {
     
     private static final long serialVersionUID = -9077248927410675523L;

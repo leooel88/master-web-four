@@ -5,6 +5,8 @@ import java.util.Date;
 import java.lang.String;
 import javax.persistence.*;
 
+import org.springframework.security.core.GrantedAuthority;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -21,9 +23,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name="role", length = 255)
     private UserRole role = UserRole.ROLE_USER;
-    public enum UserRole {
+    public enum UserRole implements GrantedAuthority {
         ROLE_USER,
         ROLE_ADMIN;
+
+        @Override
+        public String getAuthority() {
+            return this.toString();
+        }
     }
 
     @Column(name="creation_date")

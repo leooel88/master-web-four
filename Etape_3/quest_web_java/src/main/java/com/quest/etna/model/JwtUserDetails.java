@@ -1,6 +1,8 @@
 package com.quest.etna.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.quest.etna.model.User.UserRole;
 
@@ -26,7 +28,9 @@ public class JwtUserDetails implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+        grantedAuthorities.add(this.role);
+        return grantedAuthorities;
     }
 
     @Override
