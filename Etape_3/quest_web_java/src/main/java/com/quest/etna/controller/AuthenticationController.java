@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 // import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,27 +49,13 @@ public class AuthenticationController {
     @Autowired
 	private AuthenticationManager authenticationManager;
     
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> body) throws Exception {
-        String username = body.get("username");
-        String password = body.get("password");
-
-		authenticate(username, password);
-
-		final JwtUserDetails userDetails = jwtUserDetailsService
-				.loadUserByUsername(username);
-
-		final String token = jwtUtils.generateToken(userDetails);
-
-		return ResponseEntity.ok(token);
-	}
-
+    
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Object> create(@RequestBody Map<String, String> body){
         String username = body.get("username");
         String password = body.get("password");
-
+        
         if (username == null || username == "" || password == null || password == "") {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", "Username or password is missing !");
@@ -99,16 +84,44 @@ public class AuthenticationController {
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
     }
+    
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> body) throws Exception {
+        String username = body.get("username");
+        String password = body.get("password");
 
-    public HashMap<String, String> authenticate(String username, String password){
-        System.out.println("ICIIII COUCOU");
-        System.out.println(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)));
-        final JwtUserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
-        final String jwtToken = jwtUtils.generateToken(userDetails);
+        HashMap<String,String> authentication = authenticate(username, password);
+        if (authentication == null) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "Couldn't log in !");
+            return new ResponseEntity<Object>(map, HttpStatus.UNAUTHORIZED);
+        }
+        final JwtUserDetails userDetails = jwtUserDetailsService
+                .loadUserByUsername(username);
 
+        final String token = jwtUtils.generateToken(userDetails);
+
+        return ResponseEntity.ok(token);
+    }
+
+    public HashMap<String, String> authenticate(String username, String password) {
+        boolean authenticationWorked = true;
         HashMap<String, String> res = new HashMap<String, String>();
-        res.put("token", jwtToken);
+        try {
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+		} catch (Exception e) {
+            System.out.println(e.toString());
+            authenticationWorked = false;
+            res = null;
+        }
 
+        if (authenticationWorked) {
+            final JwtUserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
+            final String jwtToken = jwtUtils.generateToken(userDetails);
+    
+            res.put("token", jwtToken);
+        }
+        System.out.println(res.toString());
         return res;
     }
 }

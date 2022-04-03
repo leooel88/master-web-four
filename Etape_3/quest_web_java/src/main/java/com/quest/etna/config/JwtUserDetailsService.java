@@ -22,7 +22,6 @@ public class JwtUserDetailsService implements UserDetailsService{
 		User user = userRepository.findFirstByUsernameIgnoreCase(username);
         if (user != null) {
             JwtUserDetails userDetails = new JwtUserDetails(user);
-            System.out.println("TROUVEEEEE : " + userDetails.getId());
             return userDetails;
         } else {
             return null;
