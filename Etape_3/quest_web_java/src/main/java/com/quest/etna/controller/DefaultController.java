@@ -34,6 +34,6 @@ public class DefaultController {
     public String me(){
         JwtUserDetails userDetails = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication()
                         .getPrincipal();
-        return userDetails.getUsername();
+        return userDetails.toString();
     }
 }
