@@ -90,7 +90,7 @@ public class AddressController {
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
         try {
-            Address savingResponse = addressRepository.save(new Address(street, postalCode, city, country, user_id));
+            Address savingResponse = addressRepository.save(new Address(street, postalCode, city, country, user));
             if (savingResponse == null) {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("Error", "Address couldn't be created");
