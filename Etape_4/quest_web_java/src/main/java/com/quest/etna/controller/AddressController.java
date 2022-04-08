@@ -8,7 +8,9 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import com.quest.etna.model.Address;
+import com.quest.etna.model.JwtUserDetails;
 import com.quest.etna.model.User;
+import com.quest.etna.model.User.UserRole;
 import com.quest.etna.repositories.AddressRepository;
 import com.quest.etna.repositories.UserRepository;
 
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableJpaRepositories("com.quest.etna.repositories")
 public class AddressController {
 
+    // Repositories
     private static AddressRepository addressRepository;
     private static UserRepository userRepositoryAddress;
 
@@ -42,14 +46,33 @@ public class AddressController {
         userRepositoryAddress = this.userRepo;
     }
     
+    // FIND ALL
     @RequestMapping(value = "/address", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Object> readAll() {
-        Iterable<Address> addresses = addressRepository.findAll();
+        String username;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int userId;
+        UserRole userRole;
+        if (principal instanceof JwtUserDetails) {
+            userId = ((JwtUserDetails)principal).getId();
+            userRole = ((JwtUserDetails)principal).getRole();
+        } else {
+            username = principal.toString();
+            userId = userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId();
+            userRole = userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole();
+        }
+        Iterable<Address> addresses;
+        if (userRole.equals(UserRole.ROLE_ADMIN)) {
+            addresses = addressRepository.findAll();
+        } else {
+            addresses = addressRepository.findByUser(userId);
+        }
         ArrayList<HashMap<String, String>> jsonResponse = Address.buildMultipleJson(addresses);
         return new ResponseEntity<Object>(jsonResponse, HttpStatus.OK);
     }
 
+    // FIND BY ID
     @RequestMapping(value = "/address/{addressId}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Object> readById(@PathVariable int addressId) {
@@ -57,6 +80,19 @@ public class AddressController {
             HashMap<String, String> error = new HashMap<String, String>();
             error.put("Error", "Invalid id passed (id < 0) !");
             return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        String username;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int userId;
+        UserRole userRole;
+        if (principal instanceof JwtUserDetails) {
+            userId = ((JwtUserDetails)principal).getId();
+            userRole = ((JwtUserDetails)principal).getRole();
+        } else {
+            username = principal.toString();
+            userId = userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId();
+            userRole = userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole();
         }
 
         Optional<Address> addressOpt = addressRepository.findById(addressId);
@@ -70,6 +106,11 @@ public class AddressController {
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
         if (address != null) {
+            if (address.getUser().getId() != userId && userRole != UserRole.ROLE_ADMIN) {
+                HashMap<String, String> error = new HashMap<String, String>();
+                error.put("Error", "This address doesn't belong to you, you cannot access it !");
+                return new ResponseEntity<Object>(error, HttpStatus.METHOD_NOT_ALLOWED);
+            }
             HashMap<String, String> jsonResponse = address.buildJson();
             return new ResponseEntity<Object>(jsonResponse, HttpStatus.OK);
         } else {
@@ -79,36 +120,34 @@ public class AddressController {
         }
     }
 
+    // CREATE
     @RequestMapping(value = "/address", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Object> create(@RequestBody Map<String, String> body){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof JwtUserDetails) {
+            username = ((JwtUserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
         String street = body.get("street");
         String postalCode = body.get("postalCode");
         String city = body.get("city");
         String country = body.get("country");
-        Integer user_id = -1;
-        if (body.get("user") != null) {
-            user_id = Integer.parseInt(body.get("user"));
+
+        if (addressRepository.findFirstSameAddress(street, postalCode, city, country) != null) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "The same address already exists for another user !");
+            return new ResponseEntity<Object>(map, HttpStatus.CONFLICT);
         }
 
-        Optional<User> userOpt = userRepositoryAddress.findById(user_id);
-        User user = null;
-        try  {
-            user = userOpt.get();
-        } catch (Exception e) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "This user dosn't exist !");
-            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-        }
+        User user = userRepositoryAddress.findFirstByUsernameIgnoreCase(username);
         
         if (street == null || street == "" || postalCode == null || postalCode == "" || city == null || city == "" || country == null || country == "") {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", "One parameter is missing !");
-            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-        }
-        else if (user_id != null && user == null) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "No user with the id : " + user_id + " was found !");
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
         try {
@@ -132,6 +171,7 @@ public class AddressController {
         }
     }
 
+    // UPDATE
     @RequestMapping(value = "/address/{addressId}", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<Object> update(@RequestBody Map<String, String> body, @PathVariable int addressId){
@@ -152,14 +192,34 @@ public class AddressController {
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
 
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof JwtUserDetails) {
+            username = ((JwtUserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        if (address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId() && userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN") {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "This address doesn't belong to you, you cannot modify it !");
+            return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        
+        Optional<User> userOpt = userRepositoryAddress.findById(address.getUser().getId());
+        User user = null;
+        try  {
+            user = userOpt.get();
+        } catch (Exception e) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "This user doesn't exist !");
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
+
         String street = body.get("street");
         String postalCode = body.get("postalCode");
         String city = body.get("city");
         String country = body.get("country");
-        Integer user_id = -1;
-        if (body.get("user") != null) {
-            user_id = Integer.parseInt(body.get("user"));
-        }
 
         if (street == null) {
             street = address.getStreet();
@@ -172,19 +232,6 @@ public class AddressController {
         }
         if (country == null) {
             country = address.getCountry();
-        }
-        if (user_id == -1) {
-            user_id = address.getUser().getId();
-        }
-
-        Optional<User> userOpt = userRepositoryAddress.findById(user_id);
-        User user = null;
-        try  {
-            user = userOpt.get();
-        } catch (Exception e) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "This user dosn't exist !");
-            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
 
         address.setStreet(street);
@@ -214,24 +261,33 @@ public class AddressController {
         }
     }
 
+    // DELETE
     @RequestMapping(value = "/address/{addressId}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> delete(@PathVariable int addressId){
-        // if (addressId < 0) {
-        //     HashMap<String, String> error = new HashMap<String, String>();
-        //     error.put("Error", "Invalid id passed (id < 0) !");
-        //     return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
-        // }
+        Optional<Address> addressOpt = addressRepository.findById(addressId);
+        Address address = null;
 
-        // Optional<Address> addressOpt = addressRepository.findById(addressId);
-        // Address address = null;
+        try {
+            address = addressOpt.get();
+        } catch (Exception e) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Error", "No address found for id : " + addressId);
+            return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+        }
 
-        // try {
-        //     address = addressOpt.get();
-        // } catch (Exception e) {
-        //     HashMap<String, String> error = new HashMap<String, String>();
-        //     error.put("Success", "FALSE");
-        //     return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
-        // }
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof JwtUserDetails) {
+            username = ((JwtUserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        if (address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId() && userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN") {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "This address doesn't belong to you, you cannot modify it !");
+            return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
+        }
 
         try {
             addressRepository.deleteById(addressId);
@@ -244,6 +300,5 @@ public class AddressController {
         HashMap<String, String> error = new HashMap<String, String>();
         error.put("Success", "TRUE");
         return new ResponseEntity<Object>(error, HttpStatus.OK);
-
     }
 }
