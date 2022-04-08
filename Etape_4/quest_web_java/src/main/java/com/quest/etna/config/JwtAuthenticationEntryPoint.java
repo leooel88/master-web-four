@@ -26,12 +26,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                         Map<String,String> payload = new HashMap<>();
                         payload.put("error","Invalid or non existing JWT");
                         String msg = new ObjectMapper().writeValueAsString(payload);
+                        response.setContentType("application/json");
                         response.getWriter().print(msg);
                     } else {
                         response.setStatus(400);
                         Map<String,String> payload = new HashMap<>();
                         payload.put("error","invalid request");
                         String msg = new ObjectMapper().writeValueAsString(payload);
+                        response.setContentType("application/json");
                         response.getWriter().print(msg);
                     }
     }
