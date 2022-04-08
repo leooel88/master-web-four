@@ -3,6 +3,7 @@ package com.quest.etna.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -57,7 +58,17 @@ public class AddressController {
             error.put("Error", "Invalid id passed (id < 0) !");
             return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
         }
-        Address address = addressRepository.findById(addressId).get();
+
+        Optional<Address> addressOpt = addressRepository.findById(addressId);
+        Address address = null;
+
+        try {
+            address = addressOpt.get();
+        } catch (Exception e) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Error", "No address found for id : " + addressId);
+            return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+        }
         if (address != null) {
             HashMap<String, String> jsonResponse = address.buildJson();
             return new ResponseEntity<Object>(jsonResponse, HttpStatus.OK);
@@ -75,9 +86,20 @@ public class AddressController {
         String postalCode = body.get("postalCode");
         String city = body.get("city");
         String country = body.get("country");
-        Integer user_id = Integer.parseInt(body.get("user"));
+        Integer user_id = -1;
+        if (body.get("user") != null) {
+            user_id = Integer.parseInt(body.get("user"));
+        }
 
-        User user = userRepositoryAddress.findById(user_id).get();
+        Optional<User> userOpt = userRepositoryAddress.findById(user_id);
+        User user = null;
+        try  {
+            user = userOpt.get();
+        } catch (Exception e) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "This user dosn't exist !");
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
         
         if (street == null || street == "" || postalCode == null || postalCode == "" || city == null || city == "" || country == null || country == "") {
             Map<String, String> map = new HashMap<String, String>();
@@ -109,5 +131,119 @@ public class AddressController {
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
     }
-    
+
+    @RequestMapping(value = "/address/{addressId}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Object> update(@RequestBody Map<String, String> body, @PathVariable int addressId){
+        if (addressId < 0) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Error", "Invalid id passed (id < 0) !");
+            return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Address> addressOpt = addressRepository.findById(addressId);
+        Address address = null;
+
+        try {
+            address = addressOpt.get();
+        } catch (Exception e) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Error", "No address found for id : " + addressId);
+            return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+        }
+
+        String street = body.get("street");
+        String postalCode = body.get("postalCode");
+        String city = body.get("city");
+        String country = body.get("country");
+        Integer user_id = -1;
+        if (body.get("user") != null) {
+            user_id = Integer.parseInt(body.get("user"));
+        }
+
+        if (street == null) {
+            street = address.getStreet();
+        }
+        if (postalCode == null) {
+            postalCode = address.getPostalCode();
+        }
+        if (city == null) {
+            city = address.getCity();
+        }
+        if (country == null) {
+            country = address.getCountry();
+        }
+        if (user_id == -1) {
+            user_id = address.getUser().getId();
+        }
+
+        Optional<User> userOpt = userRepositoryAddress.findById(user_id);
+        User user = null;
+        try  {
+            user = userOpt.get();
+        } catch (Exception e) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "This user dosn't exist !");
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
+
+        address.setStreet(street);
+        address.setPostalCode(postalCode);
+        address.setCity(city);
+        address.setCountry(country);
+        address.setUser(user);
+
+        try {
+            Address savingResponse = addressRepository.save(address);
+            if (savingResponse == null) {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("Error", "Address couldn't be created");
+                return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+            }
+
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("street", savingResponse.getStreet());
+            map.put("postalCode", savingResponse.getPostalCode());
+            map.put("city", savingResponse.getCity());
+            map.put("country", savingResponse.getCountry());
+            return new ResponseEntity<Object>(map, HttpStatus.CREATED);
+        } catch(Exception e) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", e.toString());
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/address/{addressId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> delete(@PathVariable int addressId){
+        // if (addressId < 0) {
+        //     HashMap<String, String> error = new HashMap<String, String>();
+        //     error.put("Error", "Invalid id passed (id < 0) !");
+        //     return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+        // }
+
+        // Optional<Address> addressOpt = addressRepository.findById(addressId);
+        // Address address = null;
+
+        // try {
+        //     address = addressOpt.get();
+        // } catch (Exception e) {
+        //     HashMap<String, String> error = new HashMap<String, String>();
+        //     error.put("Success", "FALSE");
+        //     return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+        // }
+
+        try {
+            addressRepository.deleteById(addressId);
+        } catch (Exception e) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Success", "FALSE");
+            return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        HashMap<String, String> error = new HashMap<String, String>();
+        error.put("Success", "TRUE");
+        return new ResponseEntity<Object>(error, HttpStatus.OK);
+
+    }
 }

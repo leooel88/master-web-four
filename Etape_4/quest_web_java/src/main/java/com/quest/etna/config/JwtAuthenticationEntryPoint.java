@@ -21,19 +21,19 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
-                    // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                    System.out.println("ERROOOOOOOOOOORRRR : " + authException.getMessage());
                     if (request.getHeader("Authorization") != null) {
                         response.setStatus(401);
                         Map<String,String> payload = new HashMap<>();
                         payload.put("error","Invalid or non existing JWT");
                         String msg = new ObjectMapper().writeValueAsString(payload);
+                        response.setContentType("application/json");
                         response.getWriter().print(msg);
                     } else {
                         response.setStatus(400);
                         Map<String,String> payload = new HashMap<>();
                         payload.put("error","invalid request");
                         String msg = new ObjectMapper().writeValueAsString(payload);
+                        response.setContentType("application/json");
                         response.getWriter().print(msg);
                     }
     }
