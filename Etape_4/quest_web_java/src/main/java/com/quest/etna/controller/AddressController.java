@@ -244,7 +244,7 @@ public class AddressController {
             Address savingResponse = addressRepository.save(address);
             if (savingResponse == null) {
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("Error", "Address couldn't be created");
+                map.put("Error", "Address couldn't be saved");
                 return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
             }
 
@@ -285,7 +285,7 @@ public class AddressController {
 
         if (address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId() && userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN") {
             Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "This address doesn't belong to you, you cannot modify it !");
+            map.put("Error", "This address doesn't belong to you, you cannot delete it !");
             return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
         }
 

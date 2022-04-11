@@ -1,7 +1,8 @@
 package com.quest.etna.model;
 
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.HashMap;
 import java.lang.String;
 import javax.persistence.*;
 
@@ -92,6 +93,15 @@ public class User {
         this.role = role;
     }
 
+    public void setRoleFromString(String role) {
+        if (role.equals("ROLE_USER")) {
+            this.role = UserRole.ROLE_USER;
+        }
+        else if (role.equals("ROLE_ADMIN")) {
+            this.role = UserRole.ROLE_ADMIN;
+        }
+    }
+
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
@@ -115,5 +125,22 @@ public class User {
         hash = hash * 31 + this.username.hashCode();
         hash = hash * 13 + this.password.hashCode();
         return (int)hash;
+    }
+
+    public HashMap<String, String> buildJson() {
+        HashMap<String, String> res = new HashMap<String, String>();
+        res.put("id", String.valueOf(this.getId()));
+        res.put("username", this.getUsername());
+        res.put("role", this.getRole().toString());
+        return res;
+    }
+
+    public static ArrayList<HashMap<String, String>> buildMultipleJson(Iterable<User> users) {
+        ArrayList<HashMap<String, String>> res = new ArrayList<HashMap<String, String>>();
+        users.forEach((currentUser) -> {
+            res.add(currentUser.buildJson());
+        });
+
+        return res;
     }
 }
