@@ -15,4 +15,8 @@ public interface AddressRepository extends CrudRepository<Address, Integer>{
     @Query(value = "SELECT * FROM address a WHERE a.user_id = ?1",
             nativeQuery = true)
     Iterable<Address> findByUser(int userId);
+
+    @Query(value = "DELETE * FROM address a WHERE a.user_id = ?1",
+            nativeQuery = true)
+    void deleteByUser(int userId);
 }

@@ -173,7 +173,7 @@ public class UserController {
             userRepository.deleteById(userId);
         } catch (Exception e) {
             HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Success", "FALSE");
+            error.put("Success", "FALSE "+ e.toString());
             return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
         }
 

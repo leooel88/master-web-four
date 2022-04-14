@@ -6,6 +6,9 @@ import java.util.HashMap;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(name = "address")
 public class Address {
@@ -25,8 +28,9 @@ public class Address {
     @Column(name="country", length = 50, nullable = false)
     private String country;
     
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @Column(name="creation_date")

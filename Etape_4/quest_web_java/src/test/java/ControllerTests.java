@@ -140,8 +140,7 @@ public class ControllerTests {
         objectMapper = new ObjectMapper();
         json = objectMapper.writeValueAsString(payload);
 
-        // Get user1(USER) and user2(ADMIN)'s id
-        int user1Id = userRepositoryTest.findFirstByUsernameIgnoreCase("user1").getId();
+        // Get user2(ADMIN)'s id
         int user2Id = userRepositoryTest.findFirstByUsernameIgnoreCase("user2").getId();
 
         // Update user2(ADMIN) to ROLE_ADMIN
@@ -149,8 +148,10 @@ public class ControllerTests {
         .put("/user/" + user2Id)
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .accept(MediaType.APPLICATION_JSON)
+        .header("Authorization", ControllerTests.token)
+        .header("Content-Type", "application/json"))
+        .andExpect(MockMvcResultMatchers.status().isCreated());
 
         // 1) (GET)/user without token
         mvc.perform( MockMvcRequestBuilders
@@ -165,7 +166,15 @@ public class ControllerTests {
         payload.put("password","passworduser1");
         objectMapper = new ObjectMapper();
         json = objectMapper.writeValueAsString(payload);
+        // Register user1(USER)
+        mvc.perform( MockMvcRequestBuilders
+        .post("/register")
+        .content(json)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON));
 
+        // Get user1(USER)'s id
+        int user1Id = userRepositoryTest.findFirstByUsernameIgnoreCase("user1").getId();
         // Authenticate user1(USER)
         result = mvc.perform( MockMvcRequestBuilders
         .post("/authenticate")
@@ -235,10 +244,17 @@ public class ControllerTests {
 
         // Load user2(ADMIN)'s credentials
         payload = new HashMap<>();
-        payload.put("username","user1");
-        payload.put("password","passworduser1");
+        payload.put("username","user2");
+        payload.put("password","passworduser2");
         objectMapper = new ObjectMapper();
         json = objectMapper.writeValueAsString(payload);
+
+        // Register user2(ADMIN)
+        mvc.perform( MockMvcRequestBuilders
+        .post("/register")
+        .content(json)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON));
 
         // Authenticate user2(ADMIN)
         ResultActions result = mvc.perform( MockMvcRequestBuilders
@@ -299,7 +315,9 @@ public class ControllerTests {
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON));
-
+        // Get user1(USER) and user2(ADMIN)'s id
+        int user1Id = userRepositoryTest.findFirstByUsernameIgnoreCase("user1").getId();
+        int user2Id = userRepositoryTest.findFirstByUsernameIgnoreCase("user2").getId();
         // Authenticate user1(USER)
         result = mvc.perform( MockMvcRequestBuilders
         .post("/authenticate")
@@ -370,6 +388,7 @@ public class ControllerTests {
         objectMapper = new ObjectMapper();
         json = null;
         json = objectMapper.writeValueAsString(payload);
+        
 
         // Authenticate user2(ADMIN)
         result = mvc.perform( MockMvcRequestBuilders
@@ -377,6 +396,29 @@ public class ControllerTests {
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON));
+
+        // Retrieve user2(ADMIN)'s token
+        resultString = result.andReturn().getResponse().getContentAsString();
+        ControllerTests.token = "Bearer " + resultString;
+
+        // Load user2(ADMIN)'s modification
+        payload = new HashMap<>();
+        payload.put("role","ROLE_ADMIN");
+        objectMapper = new ObjectMapper();
+        json = objectMapper.writeValueAsString(payload);
+
+        // Get user2(ADMIN)'s id
+        user2Id = userRepositoryTest.findFirstByUsernameIgnoreCase("user2").getId();
+
+        // Update user2(ADMIN) to ROLE_ADMIN
+        mvc.perform( MockMvcRequestBuilders
+        .put("/user/" + user2Id)
+        .content(json)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .header("Authorization", ControllerTests.token)
+        .header("Content-Type", "application/json"))
+        .andExpect(MockMvcResultMatchers.status().isCreated());
 
         // Returns token
         resultString = result.andReturn().getResponse().getContentAsString();
@@ -389,9 +431,7 @@ public class ControllerTests {
         .header("Content-Type", "application/json"))
         .andExpect(MockMvcResultMatchers.status().isOk());
 
-        // Get user1(USER) and user2(ADMIN)'s id
-        int user1Id = userRepositoryTest.findFirstByUsernameIgnoreCase("user1").getId();
-        int user2Id = userRepositoryTest.findFirstByUsernameIgnoreCase("user2").getId();
+
 
         // Reset database
         mvc.perform( MockMvcRequestBuilders
@@ -400,7 +440,7 @@ public class ControllerTests {
         .header("Content-Type", "application/json"));
 
         mvc.perform( MockMvcRequestBuilders
-        .delete("/address/" + address1Id)
+        .delete("/address/" + address2Id)
         .header("Authorization", ControllerTests.token)
         .header("Content-Type", "application/json"));
 

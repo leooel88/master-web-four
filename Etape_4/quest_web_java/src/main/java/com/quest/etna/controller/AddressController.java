@@ -282,10 +282,11 @@ public class AddressController {
         } else {
             username = principal.toString();
         }
-
-        if (address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId() && userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN") {
+        boolean valid = address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId();
+        boolean role = userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN";
+        if (valid && role) {
             Map<String, String> map = new HashMap<String, String>();
-            map.put("Success", "FALSE");
+            map.put("Success", "FALSE"+valid+role);
             return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
 
@@ -298,7 +299,7 @@ public class AddressController {
         }
 
         HashMap<String, String> error = new HashMap<String, String>();
-        error.put("Success", "TRUE");
+        error.put("Success", "TRUE"+address.getCity());
         return new ResponseEntity<Object>(error, HttpStatus.OK);
     }
 }
