@@ -203,7 +203,7 @@ public class AddressController {
         if (address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId() && userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN") {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", "This address doesn't belong to you, you cannot modify it !");
-            return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
         
         Optional<User> userOpt = userRepositoryAddress.findById(address.getUser().getId());
@@ -271,7 +271,7 @@ public class AddressController {
             address = addressOpt.get();
         } catch (Exception e) {
             HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Error", "No address found for id : " + addressId);
+            error.put("Success", "FALSE");
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
 
@@ -285,8 +285,8 @@ public class AddressController {
 
         if (address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId() && userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN") {
             Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "This address doesn't belong to you, you cannot delete it !");
-            return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
+            map.put("Success", "FALSE");
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
 
         try {

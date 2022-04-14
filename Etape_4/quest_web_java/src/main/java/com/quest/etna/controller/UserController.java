@@ -92,7 +92,7 @@ public class UserController {
             user = userOpt.get();
         } catch (Exception e) {
             HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Error", "No user found for id : " + userId);
+            error.put("Success", "FALSE");
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
 
@@ -107,7 +107,7 @@ public class UserController {
         if (userId != userRepository.findFirstByUsernameIgnoreCase(authUsername).getId() && userRepository.findFirstByUsernameIgnoreCase(authUsername).getRole().toString() != "ROLE_ADMIN") {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", "This user is not you, you cannot modify it !");
-            return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
 
         String username = body.get("username");
@@ -116,7 +116,8 @@ public class UserController {
         if (username != null) {
             user.setUsername(username);
         }
-        if (role != null) {
+        if (role != null) {// && userRepository.findFirstByUsernameIgnoreCase(authUsername).getRole().equals(UserRole.ROLE_ADMIN
+
             user.setRoleFromString(role);
         }
 
@@ -150,7 +151,7 @@ public class UserController {
             user = userOpt.get();
         } catch (Exception e) {
             HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Error", "No user found for id : " + userId);
+            error.put("Success", "FALSE");
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
 
@@ -164,8 +165,8 @@ public class UserController {
 
         if (user.getId() != userRepository.findFirstByUsernameIgnoreCase(authUsername).getId() && userRepository.findFirstByUsernameIgnoreCase(authUsername).getRole().toString() != "ROLE_ADMIN") {
             Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "This user is not you, you cannot delete it !");
-            return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
+            map.put("Success", "FALSE");
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
 
         try {
