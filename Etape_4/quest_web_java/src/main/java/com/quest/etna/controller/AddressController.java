@@ -203,7 +203,7 @@ public class AddressController {
         if (address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId() && userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN") {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", "This address doesn't belong to you, you cannot modify it !");
-            return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
         
         Optional<User> userOpt = userRepositoryAddress.findById(address.getUser().getId());
@@ -271,7 +271,7 @@ public class AddressController {
             address = addressOpt.get();
         } catch (Exception e) {
             HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Error", "No address found for id : " + addressId);
+            error.put("Success", "FALSE");
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
 
@@ -282,11 +282,12 @@ public class AddressController {
         } else {
             username = principal.toString();
         }
-
-        if (address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId() && userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN") {
+        boolean valid = address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId();
+        boolean role = userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN";
+        if (valid && role) {
             Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "This address doesn't belong to you, you cannot delete it !");
-            return new ResponseEntity<Object>(map, HttpStatus.METHOD_NOT_ALLOWED);
+            map.put("Success", "FALSE"+valid+role);
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
 
         try {
@@ -298,7 +299,7 @@ public class AddressController {
         }
 
         HashMap<String, String> error = new HashMap<String, String>();
-        error.put("Success", "TRUE");
+        error.put("Success", "TRUE"+address.getCity());
         return new ResponseEntity<Object>(error, HttpStatus.OK);
     }
 }
