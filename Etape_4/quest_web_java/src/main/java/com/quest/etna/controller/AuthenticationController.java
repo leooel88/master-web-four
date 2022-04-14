@@ -31,14 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableJpaRepositories("com.quest.etna.repositories")
 public class AuthenticationController {
 
-    private static UserRepository userRepository;
+    private static UserRepository userRepositoryAuth;
 
     @Autowired
     private UserRepository userRepo;
 
     @PostConstruct
     private void init() {
-        userRepository = this.userRepo;
+        userRepositoryAuth = this.userRepo;
     }
 
     @Autowired
@@ -65,13 +65,13 @@ public class AuthenticationController {
             map.put("Error", "Username or password is missing !");
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
-        else if (userRepository.findFirstByUsernameIgnoreCase(username) != null) {
+        else if (userRepositoryAuth.findFirstByUsernameIgnoreCase(username) != null) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", "This username has already been used !");
             return new ResponseEntity<Object>(map, HttpStatus.CONFLICT);
         }
         try {
-            User savingResponse = userRepository.save(new User(username, passwordEncoder.encode(password)));
+            User savingResponse = userRepositoryAuth.save(new User(username, passwordEncoder.encode(password)));
             if (savingResponse == null) {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("Error", "User couldn't be created");
