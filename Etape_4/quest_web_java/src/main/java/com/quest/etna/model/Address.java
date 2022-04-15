@@ -139,6 +139,7 @@ public class Address {
 
     public HashMap<String, String> buildJson() {
         HashMap<String, String> res = new HashMap<String, String>();
+        res.put("id", Integer.toString(this.getId()));
         res.put("street", this.getStreet());
         res.put("postalCode", this.getPostalCode());
         res.put("city", this.getCity());
