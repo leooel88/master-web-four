@@ -150,8 +150,8 @@ public class UserController {
         try {
             user = userOpt.get();
         } catch (Exception e) {
-            HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Success", "FALSE");
+            HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+            error.put("Success", false);
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
 
@@ -164,21 +164,21 @@ public class UserController {
         }
 
         if (user.getId() != userRepository.findFirstByUsernameIgnoreCase(authUsername).getId() && userRepository.findFirstByUsernameIgnoreCase(authUsername).getRole().toString() != "ROLE_ADMIN") {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Success", "FALSE");
+            Map<String, Boolean> map = new HashMap<String, Boolean>();
+            map.put("Success", false);
             return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
 
         try {
             userRepository.deleteById(userId);
         } catch (Exception e) {
-            HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Success", "FALSE "+ e.toString());
+            HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+            error.put("Success", false);
             return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
         }
 
-        HashMap<String, String> error = new HashMap<String, String>();
-        error.put("Success", "TRUE");
+        HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+        error.put("Success", true);
         return new ResponseEntity<Object>(error, HttpStatus.OK);
     }
 }

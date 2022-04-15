@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import com.quest.etna.repositories.AddressRepository;
 import com.quest.etna.repositories.UserRepository;
 
@@ -72,19 +73,19 @@ public class ControllerTests {
 
         //authentifier pour avoir le token jwt
 
-        ResultActions result = mvc.perform( MockMvcRequestBuilders
+        MvcResult result = mvc.perform( MockMvcRequestBuilders
         .post("/authenticate")
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-        .andDo(MockMvcResultHandlers.print());
+        .andDo(MockMvcResultHandlers.print())
+        .andReturn();
 
 
         // retourner le token
-
-        String resultString = result.andReturn().getResponse().getContentAsString();
+        String resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
 
         ControllerTests.token = "Bearer " + resultString;
 
@@ -123,15 +124,16 @@ public class ControllerTests {
         .accept(MediaType.APPLICATION_JSON));
 
         // Authenticate user2(ADMIN)
-        ResultActions result = mvc.perform( MockMvcRequestBuilders
+        MvcResult result = mvc.perform( MockMvcRequestBuilders
         .post("/authenticate")
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
 
         // Retrieve user2(ADMIN)'s token
-        resultString = result.andReturn().getResponse().getContentAsString();
+        resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
         ControllerTests.token = "Bearer " + resultString;
 
         // Load user2(ADMIN)'s modification
@@ -180,10 +182,11 @@ public class ControllerTests {
         .post("/authenticate")
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON));
+        .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
 
         // Retrieve user1(USER)'s token
-        resultString = result.andReturn().getResponse().getContentAsString();
+        resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
         ControllerTests.token = "Bearer " + resultString;
 
         // 2) (GET)/user with valid token
@@ -213,10 +216,11 @@ public class ControllerTests {
         .post("/authenticate")
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON));
+        .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
 
         // Retrieve user2(ADMIN)'s token
-        resultString = result.andReturn().getResponse().getContentAsString();
+        resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
         ControllerTests.token = "Bearer " + resultString;
 
         System.out.println(userRepositoryTest.findById(user2Id).get().getRole().toString());
@@ -257,15 +261,16 @@ public class ControllerTests {
         .accept(MediaType.APPLICATION_JSON));
 
         // Authenticate user2(ADMIN)
-        ResultActions result = mvc.perform( MockMvcRequestBuilders
+        MvcResult result = mvc.perform( MockMvcRequestBuilders
         .post("/authenticate")
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
 
         // Retrieve user2(ADMIN)'s token
-        resultString = result.andReturn().getResponse().getContentAsString();
+        resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
         ControllerTests.token = "Bearer " + resultString;
 
         // Load user2(ADMIN)'s address's variables
@@ -323,10 +328,11 @@ public class ControllerTests {
         .post("/authenticate")
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON));
+        .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
 
         // Retrieve user1(USER)'s token
-        resultString = result.andReturn().getResponse().getContentAsString();
+        resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
         ControllerTests.token = "Bearer " + resultString;
 
         // 2) (GET)/address with valid token
@@ -348,10 +354,11 @@ public class ControllerTests {
         .post("/authenticate")
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON));
+        .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
 
         // Retrieve user1(USER)'s token
-        resultString = result.andReturn().getResponse().getContentAsString();
+        resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
         ControllerTests.token = "Bearer " + resultString;
         
         // Load user1's address
@@ -395,10 +402,11 @@ public class ControllerTests {
         .post("/authenticate")
         .content(json)
         .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON));
+        .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
 
         // Retrieve user2(ADMIN)'s token
-        resultString = result.andReturn().getResponse().getContentAsString();
+        resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
         ControllerTests.token = "Bearer " + resultString;
 
         // Load user2(ADMIN)'s modification
@@ -421,7 +429,7 @@ public class ControllerTests {
         .andExpect(MockMvcResultMatchers.status().isCreated());
 
         // Returns token
-        resultString = result.andReturn().getResponse().getContentAsString();
+        resultString = JsonPath.read(result.getResponse().getContentAsString(), "$.token");
         ControllerTests.token = "Bearer " + resultString;
 
         // 5) (DELETE)/user from user1(USER) with user2(ADMIN)

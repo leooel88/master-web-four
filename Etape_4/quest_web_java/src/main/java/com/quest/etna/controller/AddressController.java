@@ -137,12 +137,6 @@ public class AddressController {
         String city = body.get("city");
         String country = body.get("country");
 
-        if (addressRepository.findFirstSameAddress(street, postalCode, city, country) != null) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Error", "The same address already exists for another user !");
-            return new ResponseEntity<Object>(map, HttpStatus.CONFLICT);
-        }
-
         User user = userRepositoryAddress.findFirstByUsernameIgnoreCase(username);
         
         if (street == null || street == "" || postalCode == null || postalCode == "" || city == null || city == "" || country == null || country == "") {
@@ -158,12 +152,13 @@ public class AddressController {
                 return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
             }
 
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("street", savingResponse.getStreet());
-            map.put("postalCode", savingResponse.getPostalCode());
-            map.put("city", savingResponse.getCity());
-            map.put("country", savingResponse.getCountry());
-            return new ResponseEntity<Object>(map, HttpStatus.CREATED);
+            // Map<String, String> map = new HashMap<String, String>();
+            // map.put("id", Integer.toString(savingResponse.getId()));
+            // map.put("street", savingResponse.getStreet());
+            // map.put("postalCode", savingResponse.getPostalCode());
+            // map.put("city", savingResponse.getCity());
+            // map.put("country", savingResponse.getCountry());
+            return new ResponseEntity<Object>(savingResponse.buildJson(), HttpStatus.CREATED);
         } catch(Exception e) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", e.toString());
@@ -248,12 +243,13 @@ public class AddressController {
                 return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
             }
 
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("street", savingResponse.getStreet());
-            map.put("postalCode", savingResponse.getPostalCode());
-            map.put("city", savingResponse.getCity());
-            map.put("country", savingResponse.getCountry());
-            return new ResponseEntity<Object>(map, HttpStatus.CREATED);
+            // Map<String, String> map = new HashMap<String, String>();
+            // map.put("id", Integer.toString(savingResponse.getId()));
+            // map.put("street", savingResponse.getStreet());
+            // map.put("postalCode", savingResponse.getPostalCode());
+            // map.put("city", savingResponse.getCity());
+            // map.put("country", savingResponse.getCountry());
+            return new ResponseEntity<Object>(savingResponse.buildJson(), HttpStatus.CREATED);
         } catch(Exception e) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", e.toString());
@@ -270,8 +266,8 @@ public class AddressController {
         try {
             address = addressOpt.get();
         } catch (Exception e) {
-            HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Success", "FALSE");
+            HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+            error.put("Success", false);
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
 
@@ -285,21 +281,21 @@ public class AddressController {
         boolean valid = address.getUser().getId() != userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getId();
         boolean role = userRepositoryAddress.findFirstByUsernameIgnoreCase(username).getRole().toString() != "ROLE_ADMIN";
         if (valid && role) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Success", "FALSE"+valid+role);
+            Map<String, Boolean> map = new HashMap<String, Boolean>();
+            map.put("Success", false);
             return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
 
         try {
             addressRepository.deleteById(addressId);
         } catch (Exception e) {
-            HashMap<String, String> error = new HashMap<String, String>();
-            error.put("Success", "FALSE");
+            HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+            error.put("Success", false);
             return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
         }
 
-        HashMap<String, String> error = new HashMap<String, String>();
-        error.put("Success", "TRUE"+address.getCity());
+        HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+        error.put("Success", true);
         return new ResponseEntity<Object>(error, HttpStatus.OK);
     }
 }

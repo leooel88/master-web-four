@@ -132,8 +132,10 @@ public class AuthenticationController {
                 .loadUserByUsername(username);
 
         final String token = jwtUtils.generateToken(userDetails);
+        Map<String, String> result = new HashMap<String, String>();
+        result.put("token", token);
 
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(result);
     }
 
     public HashMap<String, String> authenticate(String username, String password) {
