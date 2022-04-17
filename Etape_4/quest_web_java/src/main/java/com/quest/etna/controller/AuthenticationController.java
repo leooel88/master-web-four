@@ -90,7 +90,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/me", method = RequestMethod.GET)
-    public ResponseEntity<?> readUserDetails(@RequestBody Map<String, String> body) throws Exception {
+    public ResponseEntity<?> readUserDetails() throws Exception {
         JwtUserDetails userDetails = null;
         try {
             userDetails = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication()
@@ -107,9 +107,9 @@ public class AuthenticationController {
         String username = userDetails.getUsername();
         User user = userRepo.findFirstByUsernameIgnoreCase(username);
         if (user != null) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("Userdetails", userDetails.toString());
-            return new ResponseEntity<Object>(map, HttpStatus.OK);
+            // Map<String, String> map = new HashMap<String, String>();
+            // map.put("Userdetails", userDetails.toString());
+            return new ResponseEntity<Object>(userDetails, HttpStatus.OK);
         } else {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", "User not logged in !");

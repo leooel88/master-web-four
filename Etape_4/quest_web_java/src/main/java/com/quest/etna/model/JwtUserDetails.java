@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quest.etna.model.User.UserRole;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -34,6 +35,7 @@ public class JwtUserDetails implements UserDetails{
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return this.password;
     }
