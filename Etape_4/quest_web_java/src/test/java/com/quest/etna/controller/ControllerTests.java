@@ -1,3 +1,4 @@
+package com.quest.etna.controller;
 import org.springframework.http.MediaType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ControllerTests {
 
     private static UserRepository userRepositoryTest;
     private static AddressRepository addressRepositoryTest;
-    
+
     @Autowired
     private UserRepository userRepo;
     @Autowired
