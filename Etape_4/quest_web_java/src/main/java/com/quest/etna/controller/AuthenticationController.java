@@ -53,7 +53,6 @@ public class AuthenticationController {
     @Autowired
 	private AuthenticationManager authenticationManager;
     
-    
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Object> create(@RequestBody Map<String, String> body){
@@ -90,6 +89,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/me", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEntity<?> readUserDetails(@RequestBody Map<String, String> body) throws Exception {
         JwtUserDetails userDetails = null;
         try {
@@ -108,7 +108,7 @@ public class AuthenticationController {
         User user = userRepo.findFirstByUsernameIgnoreCase(username);
         if (user != null) {
             Map<String, String> map = new HashMap<String, String>();
-            map.put("Userdetails", userDetails.toString());
+            map = userDetails.buildJson();
             return new ResponseEntity<Object>(map, HttpStatus.OK);
         } else {
             Map<String, String> map = new HashMap<String, String>();

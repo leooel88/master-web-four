@@ -2,6 +2,7 @@ package com.quest.etna.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import com.quest.etna.model.User.UserRole;
@@ -69,6 +70,14 @@ public class JwtUserDetails implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public HashMap<String, String> buildJson() {
+        HashMap<String, String> result = new HashMap<String, String>();
+        result.put("username", this.username);
+        result.put("role", this.role.toString());
+        result.put("id", Integer.toString(this.id));
+        return result;
     }
 
     public String toString() {

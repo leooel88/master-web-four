@@ -11,5 +11,5 @@ import org.springframework.context.annotation.ComponentScan;
 public class QuestWebJavaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QuestWebJavaApplication.class, args);
-	}
+	}	
 }

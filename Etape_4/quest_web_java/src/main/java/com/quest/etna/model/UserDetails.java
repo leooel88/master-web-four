@@ -1,5 +1,7 @@
 package com.quest.etna.model;
 
+import java.util.HashMap;
+
 import com.quest.etna.model.User.UserRole;
 
 public class UserDetails {
@@ -30,6 +32,13 @@ public class UserDetails {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public HashMap<String, String> buildJson() {
+        HashMap<String, String> result = new HashMap<String, String>();
+        result.put("username", this.username);
+        result.put("role", this.role.toString());
+        return result;
     }
 
     public String toString() {

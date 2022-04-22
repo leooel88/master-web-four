@@ -69,6 +69,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
                         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     }
                 }
+                // response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
                 filterChain.doFilter(request, response);
     }
     
