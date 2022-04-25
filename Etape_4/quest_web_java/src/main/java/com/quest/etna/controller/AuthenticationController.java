@@ -89,8 +89,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/me", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<?> readUserDetails(@RequestBody Map<String, String> body) throws Exception {
+    public ResponseEntity<?> readUserDetails() throws Exception {
         JwtUserDetails userDetails = null;
         try {
             userDetails = (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication()

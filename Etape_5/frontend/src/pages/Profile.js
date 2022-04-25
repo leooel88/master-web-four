@@ -15,10 +15,11 @@ const Profile = () => {
 	}, []);
 
 	const fetchProfile = async () => {
+		console.log('USERNAME' + username);
 		console.log(localStorage.getItem('authToken'));
 		const result = await axios.get('/me', {
 			headers: {
-				'Authorization': localStorage.getItem('authToken'),
+				Authorization: localStorage.getItem('authToken'),
 			},
 		});
 		setUsername(result.data.username);
@@ -28,10 +29,17 @@ const Profile = () => {
 	};
 
 	const handleModifyUsername = async (event) => {
+		event.preventDefault();
+		console.log(username);
+
 		const json = {
-			username: event.username.value,
+			username: username,
 		};
-		const result = await axios.update(`/user/${id}`, json);
+		const result = await axios.put(`/user/${id}`, json, {
+			headers: {
+				Authorization: localStorage.getItem('authToken'),
+			},
+		});
 		setUsername(result.data.username);
 	};
 
