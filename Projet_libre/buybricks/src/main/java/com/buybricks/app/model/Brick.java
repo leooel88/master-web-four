@@ -5,32 +5,35 @@ import java.util.HashMap;
 
 import javax.persistence.*;
 
+import com.buybricks.app.config.BrickConstant;
+
 @Entity
 @Table(name = "brick")
 public class Brick {
+    public static BrickConstant BrickContstant;
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
 
-    @Column(name="name", length = 100, nullable = false, unique = true)
+    @Column(name="name", length = BrickConstant.NAME_MAX_LENGTH, nullable = false, unique = true)
     private String name;
 
-    @Column(name="dim_h", length = 100, nullable = false)
+    @Column(name="dim_h", length = BrickConstant.DIM_MAX, nullable = false)
     private long dimH;
 
-    @Column(name="dim_l", length = 100, nullable = false)
+    @Column(name="dim_l", length = BrickConstant.DIM_MAX, nullable = false)
     private long dimL;
 
-    @Column(name="dim_w", length = 100, nullable = false)
+    @Column(name="dim_w", length = BrickConstant.DIM_MAX, nullable = false)
     private long dimW;
 
-    @Column(name="price", length = 20000, nullable = false)
+    @Column(name="price", length = BrickConstant.PRICE_MAX, nullable = false)
     private long price;
 
-    @Column(name="quantity", length = 500000, nullable = false)
+    @Column(name="quantity", length = BrickConstant.QUANTITY_MAX, nullable = false)
     private long quantity;
 
-    @Column(name="imageUrl", length = 512, nullable = false)
+    @Column(name="image_url", length = BrickConstant.IMAGE_URL_MAX_LENGTH, nullable = false)
     private String imageUrl;
 
     // CONSTRUCTOR
