@@ -1,12 +1,11 @@
-package com.quest.etna.model;
+package com.buybricks.app.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.quest.etna.model.User.UserRole;
+import com.buybricks.app.utils.UserRole;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +35,6 @@ public class JwtUserDetails implements UserDetails{
     }
 
     @Override
-    @JsonIgnore
     public String getPassword() {
         return this.password;
     }
@@ -74,16 +72,16 @@ public class JwtUserDetails implements UserDetails{
         return true;
     }
 
-    public HashMap<String, String> buildJson() {
-        HashMap<String, String> result = new HashMap<String, String>();
+    public HashMap<String, Object> buildJson() {
+        HashMap<String, Object> result = new HashMap<String, Object>();
+        result.put("id", this.id);
         result.put("username", this.username);
         result.put("role", this.role.toString());
-        result.put("id", Integer.toString(this.id));
         return result;
     }
 
     public String toString() {
-        return "Username : " + this.username + "; User role : " + this.role.toString(); 
+        return "Id : " + this.id + ";\nUsername : " + this.username + ";\nUser role : " + this.role.toString(); 
     }
     
 }

@@ -53,7 +53,6 @@ public class AuthenticationController {
     @Autowired
 	private AuthenticationManager authenticationManager;
     
-    
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Object> create(@RequestBody Map<String, String> body){
@@ -107,9 +106,9 @@ public class AuthenticationController {
         String username = userDetails.getUsername();
         User user = userRepo.findFirstByUsernameIgnoreCase(username);
         if (user != null) {
-            // Map<String, String> map = new HashMap<String, String>();
-            // map.put("Userdetails", userDetails.toString());
-            return new ResponseEntity<Object>(userDetails, HttpStatus.OK);
+            Map<String, String> map = new HashMap<String, String>();
+            map = userDetails.buildJson();
+            return new ResponseEntity<Object>(map, HttpStatus.OK);
         } else {
             Map<String, String> map = new HashMap<String, String>();
             map.put("Error", "User not logged in !");
