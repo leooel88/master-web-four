@@ -17,6 +17,8 @@ public interface BrickService {
 
     public ResponseEntity<Object> updateBrick(int id, long price, long quantity);
 
+    public ResponseEntity<Object> deleteBrickAll();
+
     public ResponseEntity<Object> deleteBrick(int id);
     
 }

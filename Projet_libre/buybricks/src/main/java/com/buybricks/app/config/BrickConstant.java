@@ -4,7 +4,7 @@ public class BrickConstant {
     public static final int NAME_MAX_LENGTH = 100;
     public static final int NAME_MIN_LENGTH = 1;
     public static final int DIM_MAX = 100;
-    public static final int DIM_MIN = 0;
+    public static final int DIM_MIN = 1;
     public static final int PRICE_MAX = 20000;
     public static final int PRICE_MIN = 0;
     public static final int QUANTITY_MAX = 500000;

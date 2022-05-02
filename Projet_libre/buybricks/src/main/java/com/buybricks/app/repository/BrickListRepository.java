@@ -9,14 +9,14 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface BrickListRepository extends CrudRepository <BrickList, Integer> {
 
-    @Query(value="SELECT * FROM brick_list b WHERE b.basket_id = ?1")
+    @Query(value="SELECT * FROM brick_list b WHERE b.basket_id = ?1", nativeQuery = true)
     Iterable<Basket> findByBasketId(int basketId);
 
     @Modifying
-    @Query(value="UPDATE brick_list b SET b.quantity = ?2, b.price = ?3 WHERE b.id = ?1")
+    @Query(value="UPDATE brick_list b SET b.quantity = ?2, b.price = ?3 WHERE b.id = ?1", nativeQuery = true)
     long updateList(int brickListId, long quantity, long price);
 
     @Modifying
-    @Query(value="DELETE * FROM brick_list b WHERE b.basket_id = ?1 and b.brick_id == ?2")
+    @Query(value="DELETE * FROM brick_list b WHERE b.basket_id = ?1 and b.brick_id == ?2", nativeQuery = true)
     long deleteList(int basketId, int brickId);
 }

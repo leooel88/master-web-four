@@ -7,6 +7,8 @@ import javax.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+@Entity
+@Table(name = "basket")
 public class Basket {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -24,6 +26,9 @@ public class Basket {
     private long totalPrice;
 
     // CONSTRUCTOR
+    public Basket(){
+        super();
+    }
     public Basket(User user) {
         super();
         if (user != null) {

@@ -22,8 +22,8 @@ public interface BrickRepository extends CrudRepository<Brick, Integer>{
 
     @Modifying
     @Query(value = "UPDATE brick b SET b.price = ?2, b.quantity = ?2 WHERE b.id = ?1", nativeQuery = true)
-    long update(int id, long price, long quantity);
+        long update(int id, long price, long quantity);
 
-    long deleteById(int id);
+    void deleteById(int id);
 
 }

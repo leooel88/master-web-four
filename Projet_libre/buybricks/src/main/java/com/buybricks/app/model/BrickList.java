@@ -8,12 +8,14 @@ import javax.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+@Entity
+@Table(name = "brick_list")
 public class BrickList {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
     
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
@@ -35,6 +37,9 @@ public class BrickList {
     private long price;
 
     // CONSTRUCTOR
+    public BrickList(){
+        super();
+    }
     public BrickList(User user, Basket basket, Brick brick, long quantity, long price) {
         if (user != null) {
             this.user = user;
