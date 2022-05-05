@@ -26,12 +26,46 @@ public class BrickController {
     public ResponseEntity<?> readAll() {
         return brickService.getBrickAll();
     }
+
+    // FIND BY ID
+    @RequestMapping(value = "/brick/{brick_id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> readById(@PathVariable String brick_id) {
+        return brickService.getBrickById(Integer.parseInt(brick_id));
+    }
     
     // FIND BY NAME
-    @RequestMapping(value = "/brick/{brick_name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/brick/name", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<?> readByName(@PathVariable String brick_name) {
-        return brickService.getBricksByName(brick_name);
+    public ResponseEntity<?> readByName(@RequestBody Map<String, String> body) {
+        String brickName = "";
+        if (body.get("brick_name") != null) 
+            brickName = body.get("brick_name");
+        return brickService.getBricksByName(brickName);
+        
+    }
+
+    // FIND BY DIMENSION
+    @RequestMapping(value = "/brick/dimension", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> readByDimension(@RequestBody Map<String, String> body) {
+        Long brickDimension = (long)-1;
+        if (body.get("brick_dimension") != null) 
+            brickDimension = Long.parseLong(body.get("brick_dimension"));
+        return brickService.getBricksByDimension(brickDimension);
+    }
+
+    // FIND BY PRICE
+    @RequestMapping(value = "/brick/price", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> readByPrice(@RequestBody Map<String, String> body) {
+        Long brickPriceMin = (long) -1;
+        Long brickPriceMax = (long) -1;
+        if (body.get("brick_price_min") != null)
+            brickPriceMin = Long.parseLong(body.get("brick_price_min"));
+        if (body.get("brick_price_max") != null)
+            brickPriceMax = Long.parseLong(body.get("brick_price_max"));
+        return brickService.getBricksByPrice(brickPriceMin, brickPriceMax);
     }
     
     // CREATE

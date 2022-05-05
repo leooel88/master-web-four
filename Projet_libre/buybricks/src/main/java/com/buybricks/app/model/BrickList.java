@@ -40,7 +40,7 @@ public class BrickList {
     public BrickList(){
         super();
     }
-    public BrickList(User user, Basket basket, Brick brick, long quantity, long price) {
+    public BrickList(User user, Basket basket, Brick brick, long quantity) {
         if (user != null) {
             this.user = user;
         }
@@ -51,7 +51,7 @@ public class BrickList {
             this.brick = brick;
         }
         this.quantity = quantity;
-        this.price = price;
+        this.price = brick.getPrice() * quantity;
     }
 
     // GETTERS

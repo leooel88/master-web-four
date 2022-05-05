@@ -19,9 +19,11 @@ public class BrickServiceImpl implements BrickService {
 
     @Override
     public ResponseEntity<Object> createBrick(String name, long dimH, long dimL, long dimW, long price, long quantity, String imageUrl) {
-        if (name == null || name.length() < BrickConstant.NAME_MIN_LENGTH || name.length() > BrickConstant.NAME_MAX_LENGTH)
+        if (name == null || name.length() < BrickConstant.NAME_MIN_LENGTH || name.length() > BrickConstant.NAME_MAX_LENGTH) {
             return ResponseHandler.createBadRequest("Cannot create Brick : name is not valid.");
-
+        }
+        if (brickRepository.findByNameIgnoreCase(name) != null)
+            return ResponseHandler.createBadRequest("Cannot create Brick : name allready used.");
         if (dimH < BrickConstant.DIM_MIN || dimL < BrickConstant.DIM_MIN || dimW < BrickConstant.DIM_MIN || dimH > BrickConstant.DIM_MAX || dimL > BrickConstant.DIM_MAX || dimW > BrickConstant.DIM_MAX)
             return ResponseHandler.createBadRequest("Cannot create Brick : dimensions are not valid.");
 
@@ -40,7 +42,7 @@ public class BrickServiceImpl implements BrickService {
         if (resBrick == null)
             return ResponseHandler.createInternalServerError("Cannot create Brick : couldn't create data in database.");
         
-        return ResponseHandler.createCreated("Brick created", resBrick.buildJson());
+        return ResponseHandler.createCreated("brick_created", resBrick.buildJson());
     }
 
     @Override
@@ -50,7 +52,24 @@ public class BrickServiceImpl implements BrickService {
         HashMap<String, Object> json = new HashMap<String, Object>();
         json.put("data", Brick.buildMultipleJson(bricks));
 
-        return ResponseHandler.createSuccess("Bricks", json);
+        return ResponseHandler.createSuccess("bricks", json);
+    }
+
+    @Override
+    public ResponseEntity<Object> getBrickById(int id) {
+        Optional<Brick> foundBrickOpt = brickRepository.findById(id);
+
+        try {
+            Brick foundBrick = foundBrickOpt.get();
+
+            HashMap<String, Object> json = new HashMap<String, Object>();
+            json.put("data", foundBrick.buildJson());
+
+            return ResponseHandler.createSuccess("brick", json);
+        } catch (Exception e) {
+            return ResponseHandler.createNotFound("Cannot search Brick : couldn't find brick with id : " + id + ".");
+        }
+        
     }
 
     @Override
@@ -64,7 +83,7 @@ public class BrickServiceImpl implements BrickService {
         json.put("name", name);
         json.put("data", Brick.buildMultipleJson(bricks));
 
-        return ResponseHandler.createSuccess("Bricks", json);
+        return ResponseHandler.createSuccess("bricks", json);
     }
 
     @Override
@@ -78,7 +97,7 @@ public class BrickServiceImpl implements BrickService {
         json.put("dimension", dimension);
         json.put("data", Brick.buildMultipleJson(bricks));
 
-        return ResponseHandler.createSuccess("Bricks", json);
+        return ResponseHandler.createSuccess("bricks", json);
     }
 
     @Override
@@ -95,7 +114,7 @@ public class BrickServiceImpl implements BrickService {
         json.put("prices", prices);
         json.put("data", Brick.buildMultipleJson(bricks));
 
-        return ResponseHandler.createSuccess("Bricks", json);
+        return ResponseHandler.createSuccess("bricks", json);
     }
 
     @Override
@@ -108,7 +127,6 @@ public class BrickServiceImpl implements BrickService {
 
         if (price == -1 && quantity == -1)
             return ResponseHandler.createBadRequest("Cannot update Brick : price and quantity are missing, nothing to update.");
-
         if (price != -1) {
             if (price < BrickConstant.PRICE_MIN || price > BrickConstant.PRICE_MAX)
                 return ResponseHandler.createBadRequest("Cannot update Brick : price is invalid.");
@@ -126,7 +144,7 @@ public class BrickServiceImpl implements BrickService {
 
         if (brick == null)
             return ResponseHandler.createInternalServerError("Cannot update Brick : couldn't update data in database.");
-        return ResponseHandler.createSuccess("Brick updated", brick.buildJson());
+        return ResponseHandler.createSuccess("brick_updated", brick.buildJson());
     }
 
     @Override
@@ -157,7 +175,6 @@ public class BrickServiceImpl implements BrickService {
 
         HashMap<String, Object> json = new HashMap<String, Object>();
         json.put("Remaining", remaining);
-
 
         return ResponseHandler.createSuccess("Brick deleted", json);
     }

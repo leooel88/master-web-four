@@ -9,6 +9,8 @@ public interface BrickService {
 
     public ResponseEntity<Object> getBrickAll();
 
+    public ResponseEntity<Object> getBrickById(int id);
+
     public ResponseEntity<Object> getBricksByName(String name);
 
     public ResponseEntity<Object> getBricksByDimension(long dimension);
