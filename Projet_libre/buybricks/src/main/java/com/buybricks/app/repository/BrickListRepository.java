@@ -6,6 +6,7 @@ import com.buybricks.app.model.BrickList;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface BrickListRepository extends CrudRepository <BrickList, Integer> {
 
@@ -19,12 +20,13 @@ public interface BrickListRepository extends CrudRepository <BrickList, Integer>
     @Query(value="UPDATE brick_list b SET b.quantity = ?2, b.price = ?3 WHERE b.id = ?1", nativeQuery = true)
     Basket updateList(int brickListId, long quantity, long price);
     
+    @Transactional
     @Modifying
-    @Query(value="DELETE * FROM brick_list b WHERE b.basketId = ?1", nativeQuery = true)
+    @Query(value="DELETE FROM brick_list b WHERE b.basket_id = ?1", nativeQuery = true)
     void emptyBasket(int basketId);
 
-
+    @Transactional
     @Modifying
-    @Query(value="DELETE * FROM brick_list b WHERE b.basket_id = ?1 and b.brick_id = ?2", nativeQuery = true)
+    @Query(value="DELETE FROM brick_list b WHERE b.basket_id = ?1 and b.brick_id = ?2", nativeQuery = true)
     void deleteProductInBasket(int basketId, int brickId);
 }

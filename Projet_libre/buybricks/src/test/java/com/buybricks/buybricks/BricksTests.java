@@ -25,9 +25,6 @@ public class BricksTests {
     @Autowired
     private MockMvc mvc;
 
-    // @Autowired
-    // private BrickService brickService;
-
     @Test
     public void testCreateGetUpdateDelete() throws Exception {
         // Load JSON

@@ -52,7 +52,7 @@ public class BasketServiceImpl implements BasketService {
             return ResponseHandler.createInternalServerError("Cannot create Basket : couldn't create data in database");
         }
 
-        return ResponseHandler.createSuccess("basket_created", resBasket.buildJson());
+        return ResponseHandler.createCreated("basket_created", resBasket.buildJson());
     }
 
     @Override
@@ -127,7 +127,7 @@ public class BasketServiceImpl implements BasketService {
 
         if (productNb > foundBrick.getQuantity() || productNb + foundBasket.getProductNb() < BasketConstant.PRODUCT_NB_MIN || productNb + foundBasket.getProductNb() > BasketConstant.PRODUCT_NB_MAX)
             return ResponseHandler.createBadRequest("Cannot update Basket : product_nb is not valid.");
-        if ((productNb * foundBrick.getPrice()) + foundBasket.getTotalPrice() < BasketConstant.TOTAL_PRICE_MIN || (productNb * foundBrick.getPrice()) + foundBasket.getTotalPrice() > BasketConstant.TOTAL_PRICE_MAX )
+        if ((productNb * foundBrick.getPrice()) + foundBasket.getTotalPrice() < BasketConstant.TOTAL_PRICE_MIN || (productNb * foundBrick.getPrice()) + foundBasket.getTotalPrice() > BasketConstant.TOTAL_PRICE_MAX)
             return ResponseHandler.createBadRequest("Cannot update Basket : total_price is not valid.");
 
         BrickList brickList = new BrickList(foundBasket.getUser(), foundBasket, foundBrick, productNb);
@@ -146,14 +146,17 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public ResponseEntity<Object> emptyBasketById(int id) {
         Optional<Basket> optBasket = basketRepository.findById(id);
-
-        if (optBasket.get() == null)
+        Basket basket;
+        try {
+            basket = optBasket.get();
+        } catch (Exception e) {
             return ResponseHandler.createNotFound("Cannot empty Basket : couldn't find basket with id : " + id + ".");
-        Basket basket = optBasket.get();
+        } 
 
         basket.setProductNb(0);
         basket.setTotalPrice(0);
 
+        basketRepository.save(basket);
         brickListRepository.emptyBasket(id);
 
         return ResponseHandler.createSuccessNoLabel("Basket successfully emptied.");   
@@ -183,6 +186,7 @@ public class BasketServiceImpl implements BasketService {
         } catch (Exception e) {
             return ResponseHandler.createNotFound("Cannot delete Brick : couldn't find brick with id : " + id + ".");
         }
+        brickListRepository.emptyBasket(id);
         basketRepository.deleteById(id);
 
         long remaining = basketRepository.count();

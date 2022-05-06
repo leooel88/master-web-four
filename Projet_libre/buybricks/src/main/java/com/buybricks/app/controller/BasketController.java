@@ -66,5 +66,21 @@ public class BasketController {
 
         return basketService.updateBasket(basketId, brickId, quantity);
     }
+
+    // EMPTY BASKET
+    @RequestMapping(value = "/basket/empty/{basket_id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> empty(@PathVariable String basket_id) {
+        int basketId = Integer.parseInt(basket_id);
+
+        return basketService.emptyBasketById(basketId);
+    }
+
+    // DELETE BASKET
+    @RequestMapping(value = "/basket/{basket_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable String basket_id) {
+        int basketId = Integer.parseInt(basket_id);
+
+        return basketService.deleteBasket(basketId);
+    }
     
 }
