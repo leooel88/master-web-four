@@ -130,8 +130,9 @@ public class AuthenticationController {
                 .loadUserByUsername(username);
 
         final String token = jwtUtils.generateToken(userDetails);
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("token", token);
+        result.put("userId", userDetails.getId());
 
         return ResponseEntity.ok(result);
     }

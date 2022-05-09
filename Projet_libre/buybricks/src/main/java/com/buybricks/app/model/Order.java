@@ -42,6 +42,13 @@ public class Order {
         this.totalPrice = totalPrice;
         this.received = true;
     }
+    public Order(Basket basket) {
+        super();
+        this.user = basket.getUser();
+        this.productNb = basket.getProductNb();
+        this.totalPrice = basket.getTotalPrice();
+        this.received = true;
+    }
 
     // GETTERS
     public int getId() {

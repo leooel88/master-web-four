@@ -47,4 +47,11 @@ public class ResponseHandler {
 
         return new ResponseEntity<Object>(json, HttpStatus.OK);
     }
+
+    public static ResponseEntity<Object> createMethodNotAllowed(String errorMessage) {
+        HashMap<String, String> json = new HashMap<String, String>();
+        json.put("Error message", errorMessage);
+
+        return new ResponseEntity<Object>(json, HttpStatus.METHOD_NOT_ALLOWED);
+    }
 }

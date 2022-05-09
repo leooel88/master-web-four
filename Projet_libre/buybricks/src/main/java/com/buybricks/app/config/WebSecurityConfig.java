@@ -59,6 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				.authorizeRequests().antMatchers("/brick/**").permitAll().and()
 				.authorizeRequests().antMatchers("/basket").permitAll().and()
 				.authorizeRequests().antMatchers("/basket/**").permitAll().and()
+				.authorizeRequests().antMatchers("/order").permitAll().and()
+				.authorizeRequests().antMatchers("/order/**").permitAll().and()
 				.authorizeRequests().antMatchers("/authenticate").permitAll().and()
 				.authorizeRequests().antMatchers("/register").permitAll()				// all other requests need to be authenticated
 				.anyRequest().authenticated().and()

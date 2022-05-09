@@ -29,4 +29,5 @@ public interface BrickListRepository extends CrudRepository <BrickList, Integer>
     @Modifying
     @Query(value="DELETE FROM brick_list b WHERE b.basket_id = ?1 and b.brick_id = ?2", nativeQuery = true)
     void deleteProductInBasket(int basketId, int brickId);
+    
 }

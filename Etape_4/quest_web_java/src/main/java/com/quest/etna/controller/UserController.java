@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-// FIND ALL
 @RestController
 @EnableJpaRepositories("com.quest.etna.repositories")
 public class UserController {
@@ -37,6 +36,7 @@ public class UserController {
         userRepository = this.userRepo;
     }
 
+    // FIND ALL
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Object> readAll() {

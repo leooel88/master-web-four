@@ -32,6 +32,9 @@ public class BasketServiceImpl implements BasketService {
     @Autowired
     private BrickRepository brickRepository;
 
+    @Autowired
+    private OrderService orderService;
+
     @Override
     public ResponseEntity<Object> createBasketFromUserId(int userId) {
         if (userId == -1)
@@ -180,9 +183,10 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public ResponseEntity<Object> deleteBasket(int id) {
         Optional<Basket> foundBasketOpt = basketRepository.findById(id);
+        Basket foundBasket;
 
         try {
-            Basket foundBasket = foundBasketOpt.get();
+            foundBasket = foundBasketOpt.get();
         } catch (Exception e) {
             return ResponseHandler.createNotFound("Cannot delete Brick : couldn't find brick with id : " + id + ".");
         }
@@ -195,6 +199,11 @@ public class BasketServiceImpl implements BasketService {
         json.put("Remaining", remaining);
 
         return ResponseHandler.createSuccess("Basket deleted", json);
+    }
+
+    @Override
+    public ResponseEntity<Object> orderBasket(int id) {
+        return orderService.createOrderFromBasketId(id);
     }
     
 }

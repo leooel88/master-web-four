@@ -20,5 +20,7 @@ public interface BasketService {
     public ResponseEntity<Object> emptyBasketByUserId(int userId);
 
     public ResponseEntity<Object> deleteBasket(int id);
+
+    public ResponseEntity<Object> orderBasket(int id);
     
 }

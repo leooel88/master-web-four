@@ -34,12 +34,9 @@ public class BasketController {
     }
 
     // FIND BY USER ID
-    @RequestMapping(value = "/basket/user", method = RequestMethod.GET)
-    public ResponseEntity<?> readByUserId(@RequestBody Map<String, String> body) {
-        if (body.get("user_id") == null)
-            return ResponseHandler.createBadRequest("Cannot search Basket : no user_id was passed.");
-        else 
-            return basketService.getBasketByUserId(Integer.parseInt(body.get("user_id")));
+    @RequestMapping(value = "/basket/user/{user_id}", method = RequestMethod.GET)
+    public ResponseEntity<?> readByUserId(@PathVariable int user_id) { 
+            return basketService.getBasketByUserId(user_id);
     }
 
     // CREATE BASKET
@@ -73,6 +70,14 @@ public class BasketController {
         int basketId = Integer.parseInt(basket_id);
 
         return basketService.emptyBasketById(basketId);
+    }
+
+    // ORDER BASKET
+    @RequestMapping(value = "/basket/order/{basket_id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> order(@PathVariable String basket_id) {
+        int basketId = Integer.parseInt(basket_id);
+
+        return basketService.orderBasket(basketId);
     }
 
     // DELETE BASKET

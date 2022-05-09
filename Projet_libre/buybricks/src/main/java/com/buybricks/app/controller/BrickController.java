@@ -30,8 +30,8 @@ public class BrickController {
     // FIND BY ID
     @RequestMapping(value = "/brick/{brick_id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<?> readById(@PathVariable String brick_id) {
-        return brickService.getBrickById(Integer.parseInt(brick_id));
+    public ResponseEntity<?> readById(@PathVariable int brick_id) {
+        return brickService.getBrickById(brick_id);
     }
     
     // FIND BY NAME
