@@ -1,5 +1,7 @@
 package com.buybricks.app.repository;
 
+import java.util.Optional;
+
 import com.buybricks.app.model.Basket;
 import com.buybricks.app.model.BrickList;
 
@@ -9,12 +11,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface BrickListRepository extends CrudRepository <BrickList, Integer> {
+    @Query(value="SELECT * FROM brick_list b WHERE b.user_id = ?1", nativeQuery = true)
+    Iterable<BrickList> findByUserId(int userId);
 
-    @Query(value="SELECT * FROM brick_list b WHERE b.basket_id = ?1", nativeQuery = true)
-    Iterable<Basket> findByBasketId(int basketId);
-
-    @Query(value="SELECT * FROM brick_list b WHERE b.baskrt_id = ?1 and b.brick_id = ?2", nativeQuery = true)
-    Basket findBrickByBasket(int basketId, int brickId);
+    @Query(value="SELECT * FROM brick_list b WHERE b.basket_id = ?1 and b.brick_id = ?2", nativeQuery = true)
+    Optional<BrickList> findByBasketAndBrick(int basketId, int brickId);
 
     @Modifying
     @Query(value="UPDATE brick_list b SET b.quantity = ?2, b.price = ?3 WHERE b.id = ?1", nativeQuery = true)

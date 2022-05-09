@@ -20,21 +20,22 @@ const BrickDetails = () => {
 			// 	Authorization: localStorage.getItem('authToken'),
 			// },
 		});
-		setBrickDetails(result.data.data.brick);
+		console.log(result);
+		setBrickDetails(result.data.brick.data);
 		return result;
 	};
 
 	return (
-		<div class="brickDetails">
-			<div class="brickDetails-name">
-				<p class="title product-title">{brickDetails.name}</p>
+		<div className="brickDetails">
+			<div className="brickDetails-name">
+				<p className="title product-title">{brickDetails.name}</p>
 			</div>
-			<div class="brickDetails-image"></div>
-			<div class="brickDetails-price">
+			<div className="brickDetails-image"></div>
+			<div className="brickDetails-price">
 				<p>Prix {brickDetails.price} euros.</p>
 				<br></br>
 			</div>
-			<div class="brickDetails-dim">
+			<div className="brickDetails-dim">
 				<p>Hauteur {brickDetails.dimH} cm.</p>
 				<br></br>
 				<p>Largeur {brickDetails.dimL} cm.</p>
@@ -42,7 +43,7 @@ const BrickDetails = () => {
 				<p>Profondeur {brickDetails.dimW} cm.</p>
 				<br></br>
 			</div>
-			<div class="brickDetails-quantity">
+			<div className="brickDetails-quantity">
 				<p>Prix {brickDetails.price} euros.</p>
 				<br></br>
 			</div>

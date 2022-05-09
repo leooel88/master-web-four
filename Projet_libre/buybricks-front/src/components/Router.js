@@ -1,5 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import { Home, Register, Profile, BrickDetails, BrickCatalog } from '../pages';
+import {
+	Home,
+	Register,
+	Profile,
+	BrickDetails,
+	BrickCatalog,
+	Basket,
+} from '../pages';
 
 const Router = () => {
 	return (
@@ -9,6 +16,7 @@ const Router = () => {
 			<Route path="/profile" element={<Profile />} />
 			<Route path="/brickDetails/:brickId" element={<BrickDetails />} />
 			<Route path="/brickCatalog" element={<BrickCatalog />} />
+			<Route path="/basket" element={<Basket />} />
 			{/* <Route path="profil" element={<Profil />} />
 			<Route path="Address" element={<Address />} />
 			<Route path="Users" element={<Users />} /> */}

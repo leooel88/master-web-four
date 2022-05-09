@@ -1,0 +1,185 @@
+package com.buybricks.app.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.annotation.PostConstruct;
+
+import com.buybricks.app.model.JwtUserDetails;
+import com.buybricks.app.model.User;
+import com.buybricks.app.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@EnableJpaRepositories("com.buybricks.app.repositories")
+public class UserController {
+    private static UserRepository userRepository;
+    
+    @Autowired
+    private UserRepository userRepo;
+
+    @PostConstruct
+    private void init() {
+        userRepository = this.userRepo;
+    }
+
+    // FIND ALL
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Object> readAll() {
+        Iterable<User> users = userRepository.findAll();
+        ArrayList<HashMap<String, Object>> jsonResponse = User.buildMultipleJson(users);
+        return new ResponseEntity<Object>(jsonResponse, HttpStatus.OK);
+    }
+
+    // FIND BY ID
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Object> readById(@PathVariable int userId) {
+        if (userId < 0) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Error", "Invalid id passed (id < 0) !");
+            return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        User user = null;
+
+        try {
+            user = userOpt.get();
+        } catch (Exception e) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Error", "No user found for id : " + userId);
+            return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+        }
+        if (user != null) {
+            HashMap<String, Object> jsonResponse = user.buildJson();
+            return new ResponseEntity<Object>(jsonResponse, HttpStatus.OK);
+        } else {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Error", "No user found for id : " + userId);
+            return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // UPDATE
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Object> update(@RequestBody Map<String, String> body, @PathVariable int userId){
+        if (userId < 0) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Error", "Invalid id passed (id < 0) !");
+            return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        User user = null;
+
+        try {
+            user = userOpt.get();
+        } catch (Exception e) {
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("Success", "FALSE");
+            return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+        }
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String authUsername;
+        if (principal instanceof JwtUserDetails) {
+            authUsername = ((JwtUserDetails)principal).getUsername();
+        } else {
+            authUsername = principal.toString();
+        }
+
+        if (userId != userRepository.findFirstByUsernameIgnoreCase(authUsername).getId() && userRepository.findFirstByUsernameIgnoreCase(authUsername).getRole().toString() != "ROLE_ADMIN") {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", "This user is not you, you cannot modify it !");
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+        }
+
+        String username = body.get("username");
+        String role = body.get("role");
+
+        if (username != null) {
+            user.setUsername(username);
+        }
+        if (role != null) {// && userRepository.findFirstByUsernameIgnoreCase(authUsername).getRole().equals(UserRole.ROLE_ADMIN
+
+            user.setRoleFromString(role);
+        }
+
+        try {
+            User savingResponse = userRepository.save(user);
+            if (savingResponse == null) {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("Error", "User couldn't be saved");
+                return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+            }
+
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("id", String.valueOf(savingResponse.getId()));
+            map.put("username", savingResponse.getUsername());
+            map.put("role", savingResponse.getRole().toString());
+            return new ResponseEntity<Object>(map, HttpStatus.CREATED);
+        } catch(Exception e) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("Error", e.toString());
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // DELETE
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> delete(@PathVariable int userId){
+        Optional<User> userOpt = userRepository.findById(userId);
+        User user = null;
+
+        try {
+            user = userOpt.get();
+        } catch (Exception e) {
+            HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+            error.put("Success", false);
+            return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+        }
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String authUsername;
+        if (principal instanceof JwtUserDetails) {
+            authUsername = ((JwtUserDetails)principal).getUsername();
+        } else {
+            authUsername = principal.toString();
+        }
+
+        if (user.getId() != userRepository.findFirstByUsernameIgnoreCase(authUsername).getId() && userRepository.findFirstByUsernameIgnoreCase(authUsername).getRole().toString() != "ROLE_ADMIN") {
+            Map<String, Boolean> map = new HashMap<String, Boolean>();
+            map.put("Success", false);
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            userRepository.deleteById(userId);
+        } catch (Exception e) {
+            HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+            error.put("Success", false);
+            return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        HashMap<String, Boolean> error = new HashMap<String, Boolean>();
+        error.put("Success", true);
+        return new ResponseEntity<Object>(error, HttpStatus.OK);
+    }
+}
+

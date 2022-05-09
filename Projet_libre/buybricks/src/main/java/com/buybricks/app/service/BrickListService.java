@@ -7,4 +7,6 @@ import org.springframework.stereotype.Component;
 public interface BrickListService {
     public ResponseEntity<Object> emptyBasket(int basketId);
 
+    public ResponseEntity<Object> getBasketByUserId(int userId);
+
 }

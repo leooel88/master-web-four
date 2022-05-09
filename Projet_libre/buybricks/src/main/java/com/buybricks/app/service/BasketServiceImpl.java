@@ -133,8 +133,17 @@ public class BasketServiceImpl implements BasketService {
         if ((productNb * foundBrick.getPrice()) + foundBasket.getTotalPrice() < BasketConstant.TOTAL_PRICE_MIN || (productNb * foundBrick.getPrice()) + foundBasket.getTotalPrice() > BasketConstant.TOTAL_PRICE_MAX)
             return ResponseHandler.createBadRequest("Cannot update Basket : total_price is not valid.");
 
-        BrickList brickList = new BrickList(foundBasket.getUser(), foundBasket, foundBrick, productNb);
-        brickListRepository.save(brickList);
+        Optional<BrickList> foundBrickListOpt = brickListRepository.findByBasketAndBrick(foundBasket.getId(), foundBrick.getId());
+        BrickList foundBrickList;
+
+        try {
+            foundBrickList = foundBrickListOpt.get();
+            foundBrickList.setQuantity(foundBrickList.getQuantity() + productNb);
+            foundBrickList.setPrice(foundBrickList.getPrice() + (productNb * foundBrick.getPrice()));
+        } catch (Exception e) {
+            BrickList brickList = new BrickList(foundBasket.getUser(), foundBasket, foundBrick, productNb);
+            brickListRepository.save(brickList);
+        }
 
         foundBasket.setProductNb(foundBasket.getProductNb() + productNb);
         foundBasket.setTotalPrice(foundBasket.getTotalPrice() + (foundBrick.getPrice() * productNb));
