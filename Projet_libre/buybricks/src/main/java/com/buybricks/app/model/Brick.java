@@ -37,6 +37,10 @@ public class Brick {
     private String imageUrl;
 
     // CONSTRUCTOR
+    public Brick(){
+        super();
+    }
+
     public Brick(String name, long dimH, long dimL, long dimW, long price, long quantity, String imageUrl) {
         super();
         this.name = name;

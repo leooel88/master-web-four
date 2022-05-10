@@ -8,12 +8,14 @@ import javax.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+@Entity
+@Table(name = "`order`")
 public class Order {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
@@ -24,10 +26,13 @@ public class Order {
     @Column(name="total_price", length = 5000000, nullable = false)
     private long totalPrice;
 
-    @Column(name="received", nullable = false)
+    @Column(name="received", columnDefinition = "TINYINT(1)", nullable = false)
     private boolean received;
 
     // CONSTRUCTOR
+    public Order(){
+        super();
+    }
     public Order(User user, long productNb, long totalPrice) {
         super();
         if (user != null) {
@@ -35,6 +40,13 @@ public class Order {
         }
         this.productNb = productNb;
         this.totalPrice = totalPrice;
+        this.received = true;
+    }
+    public Order(Basket basket) {
+        super();
+        this.user = basket.getUser();
+        this.productNb = basket.getProductNb();
+        this.totalPrice = basket.getTotalPrice();
         this.received = true;
     }
 

@@ -1,4 +1,4 @@
-package com.quest.etna.controller;
+package com.buybricks.app.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,9 +7,9 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import com.quest.etna.model.JwtUserDetails;
-import com.quest.etna.model.User;
-import com.quest.etna.repositories.UserRepository;
+import com.buybricks.app.model.JwtUserDetails;
+import com.buybricks.app.model.User;
+import com.buybricks.app.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@EnableJpaRepositories("com.quest.etna.repositories")
+@EnableJpaRepositories("com.buybricks.app.repositories")
 public class UserController {
     private static UserRepository userRepository;
     
@@ -41,7 +41,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Object> readAll() {
         Iterable<User> users = userRepository.findAll();
-        ArrayList<HashMap<String, String>> jsonResponse = User.buildMultipleJson(users);
+        ArrayList<HashMap<String, Object>> jsonResponse = User.buildMultipleJson(users);
         return new ResponseEntity<Object>(jsonResponse, HttpStatus.OK);
     }
 
@@ -66,7 +66,7 @@ public class UserController {
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
         if (user != null) {
-            HashMap<String, String> jsonResponse = user.buildJson();
+            HashMap<String, Object> jsonResponse = user.buildJson();
             return new ResponseEntity<Object>(jsonResponse, HttpStatus.OK);
         } else {
             HashMap<String, String> error = new HashMap<String, String>();
@@ -182,3 +182,4 @@ public class UserController {
         return new ResponseEntity<Object>(error, HttpStatus.OK);
     }
 }
+

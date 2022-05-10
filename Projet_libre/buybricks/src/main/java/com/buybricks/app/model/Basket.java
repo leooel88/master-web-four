@@ -1,12 +1,17 @@
 package com.buybricks.app.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.persistence.*;
 
+import com.buybricks.app.config.BasketConstant;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+@Entity
+@Table(name = "basket")
 public class Basket {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -17,13 +22,16 @@ public class Basket {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @Column(name="product_nb", length = 50, nullable = false)
+    @Column(name="product_nb", length = BasketConstant.PRODUCT_NB_MAX, nullable = false)
     private long productNb;
 
-    @Column(name="total_price", length = 5000000, nullable = false)
+    @Column(name="total_price", length = BasketConstant.TOTAL_PRICE_MAX, nullable = false)
     private long totalPrice;
 
     // CONSTRUCTOR
+    public Basket(){
+        super();
+    }
     public Basket(User user) {
         super();
         if (user != null) {
@@ -102,6 +110,15 @@ public class Basket {
         res.put("user", this.getUser().buildJson());
         res.put("productNb", this.getProductNb());
         res.put("totalPrice", this.getTotalPrice());
+        return res;
+    }
+
+    public static ArrayList<HashMap<String, Object>> buildMultipleJson(Iterable<Basket> baskets) {
+        ArrayList<HashMap<String, Object>> res = new ArrayList<HashMap<String, Object>>();
+        baskets.forEach((currentBasket) -> {
+            res.add(currentBasket.buildJson());
+        });
+
         return res;
     }
     

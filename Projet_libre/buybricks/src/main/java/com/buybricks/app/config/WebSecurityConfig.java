@@ -1,10 +1,11 @@
-package com.quest.etna.config;
+package com.buybricks.app.config;
 
-import java.util.Arrays;
+import com.buybricks.app.service.JwtUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,8 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -57,8 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		httpSecurity.cors().and()
 				.csrf().disable()
 				// dont authenticate this particular requests
-				.authorizeRequests().antMatchers("/register", "/authenticate").permitAll()
-				// all other requests need to be authenticated
+				.authorizeRequests().antMatchers("/brick", "/basket", "/basket/**", "/brick/**", "/order", "/order/**", "/authenticate", "/register", "/bricklist", "/bricklist/**").permitAll()
 				.anyRequest().authenticated().and()
 				// make sure we use stateless session; session won't be used to
 				// store user's state.

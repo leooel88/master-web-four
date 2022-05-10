@@ -9,6 +9,8 @@ public interface BrickService {
 
     public ResponseEntity<Object> getBrickAll();
 
+    public ResponseEntity<Object> getBrickById(int id);
+
     public ResponseEntity<Object> getBricksByName(String name);
 
     public ResponseEntity<Object> getBricksByDimension(long dimension);
@@ -16,6 +18,8 @@ public interface BrickService {
     public ResponseEntity<Object> getBricksByPrice(long min, long max);
 
     public ResponseEntity<Object> updateBrick(int id, long price, long quantity);
+
+    public ResponseEntity<Object> deleteBrickAll();
 
     public ResponseEntity<Object> deleteBrick(int id);
     

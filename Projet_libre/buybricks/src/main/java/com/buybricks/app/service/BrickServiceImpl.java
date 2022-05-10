@@ -3,8 +3,6 @@ package com.buybricks.app.service;
 import java.util.HashMap;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-
 import com.buybricks.app.config.BrickConstant;
 import com.buybricks.app.model.Brick;
 import com.buybricks.app.repository.BrickRepository;
@@ -16,40 +14,35 @@ import org.springframework.stereotype.Service;
 
 @Service("BrickService")
 public class BrickServiceImpl implements BrickService {
-    private static BrickRepository brickRepository;
-    
     @Autowired
-    private BrickRepository brickRepo;
-
-    @PostConstruct
-    private void init() {
-        brickRepository = this.brickRepo;
-    }
+    private BrickRepository brickRepository;
 
     @Override
     public ResponseEntity<Object> createBrick(String name, long dimH, long dimL, long dimW, long price, long quantity, String imageUrl) {
-        if (name == null || name.length() < BrickConstant.NAME_MIN_LENGTH || name.length() > BrickConstant.NAME_MAX_LENGTH)
+        if (name == null || name.length() < BrickConstant.NAME_MIN_LENGTH || name.length() > BrickConstant.NAME_MAX_LENGTH) {
             return ResponseHandler.createBadRequest("Cannot create Brick : name is not valid.");
-
-        if (dimH <= BrickConstant.DIM_MIN || dimL <= BrickConstant.DIM_MIN || dimW <= BrickConstant.DIM_MIN || dimH > BrickConstant.DIM_MAX || dimL > BrickConstant.DIM_MAX || dimW > BrickConstant.DIM_MAX)
+        }
+        if (brickRepository.findByNameIgnoreCase(name) != null)
+            return ResponseHandler.createBadRequest("Cannot create Brick : name allready used.");
+        if (dimH < BrickConstant.DIM_MIN || dimL < BrickConstant.DIM_MIN || dimW < BrickConstant.DIM_MIN || dimH > BrickConstant.DIM_MAX || dimL > BrickConstant.DIM_MAX || dimW > BrickConstant.DIM_MAX)
             return ResponseHandler.createBadRequest("Cannot create Brick : dimensions are not valid.");
 
-        if (price < BrickConstant.PRICE_MIN || price > BrickConstant.DIM_MAX)
+        if (price < BrickConstant.PRICE_MIN || price > BrickConstant.PRICE_MAX)
             return ResponseHandler.createBadRequest("Cannot create Brick : price is not valid.");
 
-        if (quantity < BrickConstant.QUANTITY_MAX || quantity > BrickConstant.QUANTITY_MIN)
+        if (quantity < BrickConstant.QUANTITY_MIN || quantity > BrickConstant.QUANTITY_MAX)
             return ResponseHandler.createBadRequest("Cannot create Brick : quantity is not valid.");
 
         if (imageUrl == null || imageUrl.length() < BrickConstant.IMAGE_URL_MIN_LENGTH || imageUrl.length() > BrickConstant.IMAGE_URL_MAX_LENGTH)
             return ResponseHandler.createBadRequest("Cannot create Brick : imageUrl is not valid.");
 
-        Brick brick = new Brick(name, dimH, dimL, price, quantity, price, imageUrl);
+        Brick brick = new Brick(name, dimH, dimL, dimW, quantity, price, imageUrl);
         Brick resBrick = brickRepository.save(brick);
 
         if (resBrick == null)
             return ResponseHandler.createInternalServerError("Cannot create Brick : couldn't create data in database.");
         
-        return ResponseHandler.createCreated("Brick created", resBrick.buildJson());
+        return ResponseHandler.createCreated("brick_created", resBrick.buildJson());
     }
 
     @Override
@@ -59,7 +52,24 @@ public class BrickServiceImpl implements BrickService {
         HashMap<String, Object> json = new HashMap<String, Object>();
         json.put("data", Brick.buildMultipleJson(bricks));
 
-        return ResponseHandler.createSuccess("Bricks", json);
+        return ResponseHandler.createSuccess("bricks", json);
+    }
+
+    @Override
+    public ResponseEntity<Object> getBrickById(int id) {
+        Optional<Brick> foundBrickOpt = brickRepository.findById(id);
+
+        try {
+            Brick foundBrick = foundBrickOpt.get();
+
+            HashMap<String, Object> json = new HashMap<String, Object>();
+            json.put("data", foundBrick.buildJson());
+
+            return ResponseHandler.createSuccess("brick", json);
+        } catch (Exception e) {
+            return ResponseHandler.createNotFound("Cannot search Brick : couldn't find brick with id : " + id + ".");
+        }
+        
     }
 
     @Override
@@ -73,7 +83,7 @@ public class BrickServiceImpl implements BrickService {
         json.put("name", name);
         json.put("data", Brick.buildMultipleJson(bricks));
 
-        return ResponseHandler.createSuccess("Bricks", json);
+        return ResponseHandler.createSuccess("bricks", json);
     }
 
     @Override
@@ -87,7 +97,7 @@ public class BrickServiceImpl implements BrickService {
         json.put("dimension", dimension);
         json.put("data", Brick.buildMultipleJson(bricks));
 
-        return ResponseHandler.createSuccess("Bricks", json);
+        return ResponseHandler.createSuccess("bricks", json);
     }
 
     @Override
@@ -104,41 +114,70 @@ public class BrickServiceImpl implements BrickService {
         json.put("prices", prices);
         json.put("data", Brick.buildMultipleJson(bricks));
 
-        return ResponseHandler.createSuccess("Bricks", json);
+        return ResponseHandler.createSuccess("bricks", json);
     }
 
     @Override
     public ResponseEntity<Object> updateBrick(int id, long price, long quantity) {
-        if (price < BrickConstant.PRICE_MIN || price > BrickConstant.PRICE_MAX)
-            return ResponseHandler.createBadRequest("Cannot update Brick : price is invalid.");
-        if (quantity < BrickConstant.QUANTITY_MIN || quantity > BrickConstant.QUANTITY_MAX)
-            return ResponseHandler.createBadRequest("Cannot update Brick : quantity is not valid.");
-
         Optional<Brick> optBrick = brickRepository.findById(id);
 
         if (optBrick.get() == null)
             return ResponseHandler.createNotFound("Cannot update Brick : couldn't find brick with id : " + id + ".");
         Brick brick = optBrick.get();
-        brick.setPrice(price);
-        brick.setQuantity(quantity);
+
+        if (price == -1 && quantity == -1)
+            return ResponseHandler.createBadRequest("Cannot update Brick : price and quantity are missing, nothing to update.");
+        if (price != -1) {
+            if (price < BrickConstant.PRICE_MIN || price > BrickConstant.PRICE_MAX)
+                return ResponseHandler.createBadRequest("Cannot update Brick : price is invalid.");
+            else
+                brick.setPrice(price);
+        }
+        if (quantity != -1) {
+            if (quantity < BrickConstant.QUANTITY_MIN || quantity > BrickConstant.QUANTITY_MAX)
+                return ResponseHandler.createBadRequest("Cannot update Brick : quantity is not valid.");
+            else
+                brick.setQuantity(quantity);
+        }
 
         brick = brickRepository.save(brick);
 
         if (brick == null)
             return ResponseHandler.createInternalServerError("Cannot update Brick : couldn't update data in database.");
-        return ResponseHandler.createSuccess("Brick updated", brick.buildJson());
+        return ResponseHandler.createSuccess("brick_updated", brick.buildJson());
+    }
+
+    @Override
+    public ResponseEntity<Object> deleteBrickAll() {
+        brickRepository.deleteAll();
+        long remaining = brickRepository.count();
+
+        if (remaining != 0)
+            return ResponseHandler.createInternalServerError("Cannot delete Bricks : couldn't delete all bricks");
+        
+        HashMap<String, Object> json = new HashMap<String, Object>();
+        json.put("Remaining", remaining);
+        return ResponseHandler.createSuccess("Bricks deleted", json);
     }
 
     @Override
     public ResponseEntity<Object> deleteBrick(int id) {
-        long deletedNb = brickRepository.deleteById(id);
+        Optional<Brick> foundBrickOpt = brickRepository.findById(id);
 
-        if (deletedNb == 0)
+        try {
+            Brick foundBrick = foundBrickOpt.get();
+        } catch (Exception e) {
             return ResponseHandler.createNotFound("Cannot delete Brick : couldn't find brick with id : " + id + ".");
+        }
+        brickRepository.deleteById(id);
+
+        long remaining = brickRepository.count();
+
         HashMap<String, Object> json = new HashMap<String, Object>();
-        json.put("deleted", deletedNb);
+        json.put("Remaining", remaining);
 
         return ResponseHandler.createSuccess("Brick deleted", json);
     }
+
     
 }
