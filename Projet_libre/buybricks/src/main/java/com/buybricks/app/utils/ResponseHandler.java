@@ -41,6 +41,7 @@ public class ResponseHandler {
         return new ResponseEntity<Object>(json, HttpStatus.OK);
     }
 
+
     public static ResponseEntity<Object> createSuccessNoLabel(String successMessage) {
         HashMap<String, String> json = new HashMap<String, String>();
         json.put("Success message", successMessage);

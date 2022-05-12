@@ -20,27 +20,9 @@ const Home = () => {
 	};
 
 	return (
-		<form onSubmit={handleLogin}>
-			<label htmlFor="username">User name</label>
-			<input
-				type="text"
-				id="username"
-				name="username"
-				placeholder="Your name"
-				required
-			/>
-
-			<label htmlFor="password">Password</label>
-			<input
-				type="password"
-				id="password"
-				name="password"
-				placeholder="Enter your password"
-				required
-			/>
-
-			<input type="submit" value="Login" />
-		</form>
+		<div className="home-wrapper">
+			<p>HOME</p>
+		</div>
 	);
 };
 

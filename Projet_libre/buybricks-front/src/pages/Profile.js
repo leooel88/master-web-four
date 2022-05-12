@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Profile = () => {
+	const navigate = useNavigate();
 	const [username, setUsername] = React.useState('');
 	const [role, setRole] = React.useState('');
 	const [id, setId] = React.useState('');
@@ -43,6 +45,12 @@ const Profile = () => {
 		setUsername(result.data.username);
 	};
 
+	const handleLogout = () => {
+		localStorage.clear();
+		navigate('/');
+		window.location.reload(false);
+	};
+
 	return (
 		<>
 			<form onSubmit={handleModifyUsername}>
@@ -59,6 +67,9 @@ const Profile = () => {
 			</form>
 
 			<p>Role : {role}</p>
+			<div id="logoutButton">
+				<button onClick={handleLogout}>Logout</button>
+			</div>
 		</>
 	);
 };
