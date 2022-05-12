@@ -76,9 +76,10 @@ public class AuthenticationController {
                 return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
             }
             UserDetails userDetails = new UserDetails(savingResponse);
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, Object> map = new HashMap<String, Object>();
             map.put("username", userDetails.getUsername());
             map.put("role", userDetails.getRole().toString());
+            map.put("userId", userDetails.getId());
             return new ResponseEntity<Object>(map, HttpStatus.CREATED);
         } catch(Exception e) {
             Map<String, String> map = new HashMap<String, String>();

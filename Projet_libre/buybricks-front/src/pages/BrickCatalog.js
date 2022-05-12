@@ -154,16 +154,20 @@ const BrickCatalog = () => {
 					<button onClick={fetchBricks}>Clear filters</button>
 				</div>
 			</div>
-			<ul>
-				{brickList &&
-					brickList.map((brick) => (
-						<li key={brick.id}>
-							<Link to={`/brickDetails/${brick.id}`}>
-								{brick.name}
-							</Link>
-						</li>
-					))}
-			</ul>
+			<div className="cardListWrapper">
+				<ul>
+					{brickList &&
+						brickList.map((brick) => (
+							<div className="brickCardWrapper">
+								<li key={brick.id}>
+									<Link to={`/brickDetails/${brick.id}`}>
+										{brick.name}
+									</Link>
+								</li>
+							</div>
+						))}
+				</ul>
+			</div>
 		</div>
 	);
 };

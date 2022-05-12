@@ -12,7 +12,13 @@ const Register = () => {
 			username: event.target.username.value,
 			password: event.target.password.value,
 		};
-		await register(registerJson);
+		const registerResult = await register(registerJson);
+
+		let result = await axios.post('/basket', {
+			user_id: registerResult.data.userId,
+		});
+		console.log(result);
+		return result;
 	};
 
 	return (
