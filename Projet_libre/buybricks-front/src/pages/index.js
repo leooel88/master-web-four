@@ -4,5 +4,6 @@ import Profile from './Profile.js';
 import BrickDetails from './BrickDetails';
 import BrickCatalog from './BrickCatalog';
 import Basket from './Basket';
+import Login from './Login.js';
 
-export { Home, Register, Profile, BrickDetails, BrickCatalog, Basket };
+export { Home, Login, Register, Profile, BrickDetails, BrickCatalog, Basket };

@@ -41,7 +41,6 @@ const BrickCatalog = () => {
 						</li>
 					))}
 			</ul>
-			<Link to={`/basket/${localStorage.getItem('userId')}`}>Basket</Link>
 		</div>
 	);
 };

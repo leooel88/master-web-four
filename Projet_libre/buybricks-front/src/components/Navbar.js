@@ -1,6 +1,31 @@
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+	const profileLogin = () => {
+		if (
+			localStorage.getItem('userId') &&
+			localStorage.getItem('authToken')
+		) {
+			return <Link to="/profile">Profile</Link>;
+		} else {
+			return <Link to="/login">Login</Link>;
+		}
+	};
+	const registerLogin = () => {
+		if (
+			localStorage.getItem('userId') &&
+			localStorage.getItem('authToken')
+		) {
+			return;
+		} else {
+			return (
+				<li>
+					<Link to="/register">Register</Link>
+				</li>
+			);
+		}
+	};
+
 	return (
 		<>
 			<nav>
@@ -8,14 +33,10 @@ const Navbar = () => {
 					<li>
 						<Link to="/">Home</Link>
 					</li>
-					<li>
-						<Link to="/profile">Profile</Link>
-					</li>
+					<li>{profileLogin()}</li>
 					<li>Address</li>
 					<li>Users</li>
-					<li>
-						<Link to="/register">Register</Link>
-					</li>
+					{registerLogin()}
 					<li>
 						<Link to="/brickCatalog">Catalog</Link>
 					</li>

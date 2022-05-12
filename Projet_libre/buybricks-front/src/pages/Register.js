@@ -14,6 +14,7 @@ const Register = () => {
 		};
 		await register(registerJson);
 	};
+
 	return (
 		<form onSubmit={handleRegister}>
 			<label htmlFor="username">User name</label>

@@ -50,6 +50,38 @@ const Basket = () => {
 		return result;
 	};
 
+	const handleEmptyBasket = async () => {
+		let result = '';
+		try {
+			result = await axios.get(
+				`/basket/user/${localStorage.getItem('userId')}`,
+				{
+					// headers: {
+					// 	Authorization: localStorage.getItem('authToken'),
+					// },
+				}
+			);
+		} catch (error) {
+			console.log(error);
+		}
+		setBasket(result.data.basket.data);
+		console.log(result.data.basket.data);
+
+		try {
+			result = await axios.put(`/basket/empty/${basket.id}`, {
+				// headers: {
+				// 	Authorization: localStorage.getItem('authToken'),
+				// },
+			});
+		} catch (error) {
+			console.log(error);
+		}
+
+		window.location.reload(false);
+
+		return result;
+	};
+
 	return (
 		<div className="basket">
 			<div className="basket-name">
@@ -80,6 +112,9 @@ const Basket = () => {
 				<div className="basket-productnb">
 					<p>Nombre de produit : {basket.productNb}</p>
 					<br></br>
+				</div>
+				<div id="emptyBasket">
+					<button onClick={handleEmptyBasket}>Empty basket</button>
 				</div>
 			</div>
 		</div>

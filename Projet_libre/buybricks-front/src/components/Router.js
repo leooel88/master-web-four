@@ -1,6 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import {
 	Home,
+	Login,
 	Register,
 	Profile,
 	BrickDetails,
@@ -8,15 +9,24 @@ import {
 	Basket,
 } from '../pages';
 
+import PrivateRoute from './PrivateRoute.js';
+
 const Router = () => {
 	return (
 		<Routes>
 			<Route path="/" element={<Home />} />
+			<Route path="/login" element={<Login />} />
 			<Route path="/register" element={<Register />} />
-			<Route path="/profile" element={<Profile />} />
+			<Route
+				path="/profile"
+				element={<PrivateRoute Component={Profile} />}
+			/>
 			<Route path="/brickDetails/:brickId" element={<BrickDetails />} />
 			<Route path="/brickCatalog" element={<BrickCatalog />} />
-			<Route path="/basket" element={<Basket />} />
+			<Route
+				path="/basket"
+				element={<PrivateRoute Component={Basket} />}
+			/>
 			{/* <Route path="profil" element={<Profil />} />
 			<Route path="Address" element={<Address />} />
 			<Route path="Users" element={<Users />} /> */}
