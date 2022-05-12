@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -82,6 +81,38 @@ const Basket = () => {
 		return result;
 	};
 
+	const handlerOrderBasket = async (event) => {
+		let result = '';
+		try {
+			result = await axios.get(
+				`/basket/user/${localStorage.getItem('userId')}`,
+				{
+					// headers: {
+					// 	Authorization: localStorage.getItem('authToken'),
+					// },
+				}
+			);
+		} catch (error) {
+			console.log(error);
+		}
+		setBasket(result.data.basket.data);
+		console.log(result.data.basket.data);
+
+		try {
+			result = await axios.put(`/basket/order/${basket.id}`, {
+				// headers: {
+				// 	Authorization: localStorage.getItem('authToken'),
+				// },
+			});
+		} catch (error) {
+			console.log(error);
+		}
+
+		window.location.reload(false);
+
+		return result;
+	};
+
 	return (
 		<div className="basket">
 			<div className="basket-name">
@@ -113,7 +144,10 @@ const Basket = () => {
 					<p>Nombre de produit : {basket.productNb}</p>
 					<br></br>
 				</div>
-				<div id="emptyBasket">
+				<div className="orderBasketButton">
+					<button onClick={handlerOrderBasket}>Order basket</button>
+				</div>
+				<div className="emptyBasketButtonWrapper">
 					<button onClick={handleEmptyBasket}>Empty basket</button>
 				</div>
 			</div>

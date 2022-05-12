@@ -36,7 +36,7 @@ public class BrickServiceImpl implements BrickService {
         if (imageUrl == null || imageUrl.length() < BrickConstant.IMAGE_URL_MIN_LENGTH || imageUrl.length() > BrickConstant.IMAGE_URL_MAX_LENGTH)
             return ResponseHandler.createBadRequest("Cannot create Brick : imageUrl is not valid.");
 
-        Brick brick = new Brick(name, dimH, dimL, dimW, quantity, price, imageUrl);
+        Brick brick = new Brick(name, dimH, dimL, dimW, price, quantity, imageUrl);
         Brick resBrick = brickRepository.save(brick);
 
         if (resBrick == null)

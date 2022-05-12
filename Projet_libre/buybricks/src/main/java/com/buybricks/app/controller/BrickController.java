@@ -35,7 +35,7 @@ public class BrickController {
     }
     
     // FIND BY NAME
-    @RequestMapping(value = "/brick/name", method = RequestMethod.GET)
+    @RequestMapping(value = "/brick/name", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> readByName(@RequestBody Map<String, String> body) {
         String brickName = "";
@@ -46,7 +46,7 @@ public class BrickController {
     }
 
     // FIND BY DIMENSION
-    @RequestMapping(value = "/brick/dimension", method = RequestMethod.GET)
+    @RequestMapping(value = "/brick/dimension", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> readByDimension(@RequestBody Map<String, String> body) {
         Long brickDimension = (long)-1;
@@ -56,7 +56,7 @@ public class BrickController {
     }
 
     // FIND BY PRICE
-    @RequestMapping(value = "/brick/price", method = RequestMethod.GET)
+    @RequestMapping(value = "/brick/price", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> readByPrice(@RequestBody Map<String, String> body) {
         Long brickPriceMin = (long) -1;

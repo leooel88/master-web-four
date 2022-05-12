@@ -7,6 +7,7 @@ import com.buybricks.app.model.Basket;
 import com.buybricks.app.model.Order;
 import com.buybricks.app.model.User;
 import com.buybricks.app.repository.BasketRepository;
+import com.buybricks.app.repository.BrickListRepository;
 import com.buybricks.app.repository.OrderRepository;
 import com.buybricks.app.repository.UserRepository;
 import com.buybricks.app.utils.ResponseHandler;
@@ -25,7 +26,7 @@ public class OrderServiceImpl implements OrderService{
     private OrderRepository orderRepository;
 
     @Autowired
-    private OrderRepository brickListRepository;
+    private BrickListRepository brickListRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -45,6 +46,7 @@ public class OrderServiceImpl implements OrderService{
         orderRepository.save(order);
 
         basketRepository.emptyBasket(basketId);
+        brickListRepository.emptyBasket(basketId);
 
         return ResponseHandler.createSuccess("Order created", order.buildJson());
 
@@ -70,15 +72,12 @@ public class OrderServiceImpl implements OrderService{
             return ResponseHandler.createBadRequest("Cannot search Order : couldn't find User with id : " + userId + ".");
         }
 
-        Order foundOrder = orderRepository.findByUserId(userId);
-
-        if (foundOrder == null)
-            return ResponseHandler.createNotFound("Cannot search Order : couldn't find basket with userId : " + userId + ".");
+        Iterable<Order> foundOrders = orderRepository.findByUserId(userId);
 
         HashMap<String, Object> json = new HashMap<String, Object>();
-        json.put("data", foundOrder.buildJson());
+        json.put("data", Order.buildMultipleJson(foundOrders));
 
-        return ResponseHandler.createSuccess("order", json);
+        return ResponseHandler.createSuccess("orders", json);
     }
 
     @Override

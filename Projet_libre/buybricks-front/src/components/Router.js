@@ -7,6 +7,9 @@ import {
 	BrickDetails,
 	BrickCatalog,
 	Basket,
+	Orders,
+	BrickEdition,
+	NoRight,
 } from '../pages';
 
 import PrivateRoute from './PrivateRoute.js';
@@ -15,6 +18,7 @@ const Router = () => {
 	return (
 		<Routes>
 			<Route path="/" element={<Home />} />
+			<Route path="/noRight" element={<NoRight />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/register" element={<Register />} />
 			<Route
@@ -26,6 +30,14 @@ const Router = () => {
 			<Route
 				path="/basket"
 				element={<PrivateRoute Component={Basket} />}
+			/>
+			<Route
+				path="/orders"
+				element={<PrivateRoute Component={Orders} />}
+			/>
+			<Route
+				path="/brickEdition"
+				element={<PrivateRoute Component={BrickEdition} />}
 			/>
 			{/* <Route path="profil" element={<Profil />} />
 			<Route path="Address" element={<Address />} />
