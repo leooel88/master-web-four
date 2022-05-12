@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.lang.String;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
