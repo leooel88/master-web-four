@@ -144,23 +144,48 @@ const BrickEdition = () => {
 	};
 
 	return (
-		<div className="brickEditionWrapper">
-			<div className="brickCreationFormWrapper">
-				<div className="filterFormWrapper">
-					<div className="brickCreationFormTitleWrapper">
-						<p className="seqTitle">Create brick</p>
-					</div>
-					<form onSubmit={handleCreateBrick}>
-						<label htmlFor="brickName">Brick name</label>
+		<div
+			class="flex flex-row justify-center flex-nowrap"
+			className="brickEditionWrapper"
+		>
+			<div class="w-72 mx-20" className="brickCreationFormWrapper">
+				<div className="brickCreationFormTitleWrapper">
+					<p
+						class="font-medium leading-tight text-2xl mt-0 mb-2 text-blue-600"
+						className="seqTitle"
+					>
+						Create brick
+					</p>
+				</div>
+				<form
+					class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+					onSubmit={handleCreateBrick}
+				>
+					<div class="mb-4">
+						<label
+							class="block text-gray-700 text-sm font-bold mb-2"
+							htmlFor="brickName"
+						>
+							Brick name
+						</label>
 						<input
+							class="shadow appearance-none border rounded w-full h-7 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="text"
 							id="brickName"
 							name="brickName"
 							required
 						/>
+					</div>
 
-						<label htmlFor="brickDimH">Brick dimension W</label>
+					<div class="mb-4">
+						<label
+							class="block text-gray-700 text-sm font-bold mb-2"
+							htmlFor="brickDimH"
+						>
+							Brick dimension W
+						</label>
 						<input
+							class="shadow appearance-none border rounded w-full h-7 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="number"
 							id="brickDimH"
 							name="brickDimH"
@@ -168,9 +193,17 @@ const BrickEdition = () => {
 							max="100"
 							required
 						/>
+					</div>
 
-						<label htmlFor="brickDimL">Brick dimension L</label>
+					<div class="mb-4">
+						<label
+							class="block text-gray-700 text-sm font-bold mb-2"
+							htmlFor="brickDimL"
+						>
+							Brick dimension L
+						</label>
 						<input
+							class="shadow appearance-none border rounded w-full h-7 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="number"
 							id="brickDimL"
 							name="brickDimL"
@@ -178,9 +211,17 @@ const BrickEdition = () => {
 							max="100"
 							required
 						/>
+					</div>
 
-						<label htmlFor="brickDimW">Brick dimension W</label>
+					<div class="mb-4">
+						<label
+							class="block text-gray-700 text-sm font-bold mb-2"
+							htmlFor="brickDimW"
+						>
+							Brick dimension W
+						</label>
 						<input
+							class="shadow appearance-none border rounded w-full h-7 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="number"
 							id="brickDimW"
 							name="brickDimW"
@@ -188,9 +229,17 @@ const BrickEdition = () => {
 							max="100"
 							required
 						/>
+					</div>
 
-						<label htmlFor="brickPrice">Brick price</label>
+					<div class="mb-4">
+						<label
+							class="block text-gray-700 text-sm font-bold mb-2"
+							htmlFor="brickPrice"
+						>
+							Brick price
+						</label>
 						<input
+							class="shadow appearance-none border rounded w-full h-7 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="number"
 							id="brickPrice"
 							name="brickPrice"
@@ -198,9 +247,17 @@ const BrickEdition = () => {
 							max="20000"
 							required
 						/>
+					</div>
 
-						<label htmlFor="brickQuantity">Brick quantity</label>
+					<div class="mb-4">
+						<label
+							class="block text-gray-700 text-sm font-bold mb-2"
+							htmlFor="brickQuantity"
+						>
+							Brick quantity
+						</label>
 						<input
+							class="shadow appearance-none border rounded w-full h-7 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="number"
 							id="brickQuantity"
 							name="brickQuantity"
@@ -208,28 +265,69 @@ const BrickEdition = () => {
 							max="500000"
 							required
 						/>
+					</div>
 
-						<label htmlFor="brickImageUrl">Brick image URL</label>
+					<div class="mb-4">
+						<label
+							class="block text-gray-700 text-sm font-bold mb-2"
+							htmlFor="brickImageUrl"
+						>
+							Brick image URL
+						</label>
 						<input
+							class="shadow appearance-none border rounded w-full h-7 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="text"
 							name="brickImageUrl"
 							id="brickImageUrl"
 							maxLength="512"
 							required
 						/>
-						<input type="submit" value="Create new Brick" />
-					</form>
-				</div>
-			</div>
-			<div className="brickDeleteFormWrapper">
-				<div className="brickDeleteFormTitleWrapper">
-					<p className="seqTitle">Delete brick</p>
-				</div>
-				<form onSubmit={handleDeleteBrick}>
-					<label htmlFor="brickId">Brick id</label>
-					<input type="number" id="brickId" name="brickId" required />
+					</div>
 
-					<input type="submit" value="Delete Brick" />
+					<div class="flex items-center justify-between">
+						<input
+							class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+							type="submit"
+							value="Create new Brick"
+						/>
+					</div>
+				</form>
+			</div>
+			<div class="w-72 mx-20" className="brickDeleteFormWrapper">
+				<div className="brickDeleteFormTitleWrapper">
+					<p
+						class="font-medium leading-tight text-2xl mt-0 mb-2 text-blue-600"
+						className="seqTitle"
+					>
+						Delete brick
+					</p>
+				</div>
+				<form
+					class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+					onSubmit={handleDeleteBrick}
+				>
+					<div class="mb-4">
+						<label
+							class="block text-gray-700 text-sm font-bold mb-2"
+							htmlFor="brickId"
+						>
+							Brick id
+						</label>
+						<input
+							class="shadow appearance-none border rounded w-full h-7 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+							type="number"
+							id="brickId"
+							name="brickId"
+							required
+						/>
+					</div>
+					<div class="flex items-center justify-between">
+						<input
+							class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+							type="submit"
+							value="Delete Brick"
+						/>
+					</div>
 				</form>
 			</div>
 		</div>

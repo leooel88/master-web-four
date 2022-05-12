@@ -68,8 +68,6 @@ const Navbar = () => {
 						<Link to="/">Home</Link>
 					</li>
 					<li>{profileLogin()}</li>
-					<li>Address</li>
-					<li>Users</li>
 					{registerLogin()}
 					<li>
 						<Link to="/brickCatalog">Catalog</Link>

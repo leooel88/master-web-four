@@ -35,14 +35,25 @@ const Orders = () => {
 				{orderList &&
 					orderList.map((order) => (
 						<li key={order.id}>
-							<div className="orderWrapper">
-								<p>Order id : {order.id}</p>
-								<br></br>
-								<p>Order total price : {order.totalPrice}</p>
-								<br></br>
-								<p>
-									Order number of products : {order.productNb}
-								</p>
+							<div
+								class="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+								className="orderWrapper"
+							>
+								<div class="flex flex-col justify-between p-4 leading-normal">
+									<p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+										Order id : {order.id}
+									</p>
+									<br></br>
+									<p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+										Order total price : {order.totalPrice}
+									</p>
+									<br></br>
+									<p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+										Order number of products :{' '}
+										{order.productNb}
+									</p>
+								</div>
+
 								<br></br>
 							</div>
 						</li>
