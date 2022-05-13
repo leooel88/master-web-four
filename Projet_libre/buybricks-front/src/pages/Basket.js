@@ -114,9 +114,9 @@ const Basket = () => {
 	};
 
 	return (
-		<div className="basket">
+		<div class="bg-[#AAAAAA]">
 			<div className="basket-name">
-				<p className="title product-title">Your basket</p>
+				<p class="font-medium leading-tight text-5xl mt-0 mb-2 text-black-600">Your basket</p>
 			</div>
 			<div className="basket-content">
 				<ul>
@@ -128,8 +128,8 @@ const Basket = () => {
 								>
 									{basketBrick.brick.name}
 								</Link>
-								<p>Brick number : {basketBrick.quantity}</p>
-								<p>Price : {basketBrick.price}</p>
+								<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">Brick number : {basketBrick.quantity}</p>
+								<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">Price : {basketBrick.price}</p>
 							</li>
 						))}
 				</ul>
@@ -137,18 +137,18 @@ const Basket = () => {
 			<div className="basketDetails">
 				<div className="basket-image"></div>
 				<div className="basket-totalprice">
-					<p>Prix total : {basket.totalPrice} euros.</p>
+					<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">Prix total : {basket.totalPrice} euros.</p>
 					<br></br>
 				</div>
 				<div className="basket-productnb">
-					<p>Nombre de produit : {basket.productNb}</p>
+					<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">Nombre de produit : {basket.productNb}</p>
 					<br></br>
 				</div>
 				<div className="orderBasketButton">
-					<button onClick={handlerOrderBasket}>Order basket</button>
+					<button onClick={handlerOrderBasket} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Order basket</button>
 				</div>
 				<div className="emptyBasketButtonWrapper">
-					<button onClick={handleEmptyBasket}>Empty basket</button>
+					<button onClick={handleEmptyBasket} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Empty basket</button>
 				</div>
 			</div>
 		</div>
