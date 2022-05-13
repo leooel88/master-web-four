@@ -111,7 +111,7 @@ const BrickCatalog = () => {
 					</form>
 				</div>
 
-				<div className="filterFormWrapper">
+				<div className="filterFormWrapper flex flex-col grid place-items-center h-screen">
 					<form onSubmit={handleFilterByDim}>
 						<label htmlFor="dimFilter">Dimension</label>
 						<input
@@ -126,7 +126,7 @@ const BrickCatalog = () => {
 					</form>
 				</div>
 
-				<div className="filterFormWrapper">
+				<div className="filterFormWrapper flex flex-col grid place-items-center h-screen">
 					<form onSubmit={handleFilterByPrice}>
 						<label htmlFor="priceMinFilter">Minimum price</label>
 						<input

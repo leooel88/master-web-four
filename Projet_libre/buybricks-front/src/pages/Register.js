@@ -22,6 +22,7 @@ const Register = () => {
 	};
 
 	return (
+		<div class='flex flex-col grid place-items-center h-screen'>
 		<form onSubmit={handleRegister}>
 			<label htmlFor="username">User name</label>
 			<input
@@ -43,6 +44,7 @@ const Register = () => {
 
 			<input type="submit" value="Register" />
 		</form>
+		</div>
 	);
 };
 

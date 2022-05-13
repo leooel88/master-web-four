@@ -52,7 +52,7 @@ const Profile = () => {
 	};
 
 	return (
-		<>
+		<div class='flex flex-col grid place-items-center h-screen'>
 			<form onSubmit={handleModifyUsername}>
 				<label htmlFor="username">Username</label>
 				<input
@@ -70,7 +70,7 @@ const Profile = () => {
 			<div id="logoutButton">
 				<button onClick={handleLogout}>Logout</button>
 			</div>
-		</>
+		</div>
 	);
 };
 

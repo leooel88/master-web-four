@@ -148,7 +148,7 @@ const BrickEdition = () => {
 			class="flex flex-row justify-center flex-nowrap"
 			className="brickEditionWrapper"
 		>
-			<div class="w-72 mx-20" className="brickCreationFormWrapper">
+			<div class="w-72 mx-20" className="brickCreationFormWrapper flex flex-col grid place-items-center h-screen">
 				<div className="brickCreationFormTitleWrapper">
 					<p
 						class="font-medium leading-tight text-2xl mt-0 mb-2 text-blue-600"
@@ -293,7 +293,7 @@ const BrickEdition = () => {
 					</div>
 				</form>
 			</div>
-			<div class="w-72 mx-20" className="brickDeleteFormWrapper">
+			<div class="w-72 mx-20" className="brickDeleteFormWrapper flex flex-col grid place-items-center h-screen">
 				<div className="brickDeleteFormTitleWrapper">
 					<p
 						class="font-medium leading-tight text-2xl mt-0 mb-2 text-blue-600"

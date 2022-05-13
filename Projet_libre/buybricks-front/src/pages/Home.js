@@ -20,8 +20,9 @@ const Home = () => {
 	};
 
 	return (
-		<div className="home-wrapper">
-			<p>HOME</p>
+		<div className="flex flex-col grid place-items-center h-screen">
+			<img src={require('./title.gif')}></img>
+			<iframe src="https://giphy.com/embed/26CaNjBJS7fIW4NFe" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 		</div>
 	);
 };
