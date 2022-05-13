@@ -53,9 +53,11 @@ const Profile = () => {
 
 	return (
 		<div class='flex flex-col grid place-items-center h-screen'>
-			<form onSubmit={handleModifyUsername}>
-				<label htmlFor="username">Username</label>
+			<form onSubmit={handleModifyUsername} class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+				<div class="mb-4">
+				<label htmlFor="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
 				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					type="text"
 					id="username"
 					name="username"
@@ -63,12 +65,15 @@ const Profile = () => {
 					onChange={(event) => setUsername(event.target.value)}
 					required
 				/>
-				<input type="submit" value="Modify" />
+				</div>
+				<div class="flex items-center justify-between">
+				<input type="submit" value="Modify" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
+				</div>
 			</form>
 
-			<p>Role : {role}</p>
+			<p class="font-medium leading-tight text-5xl mt-0 mb-2 text-black-600">Role : {role}</p>
 			<div id="logoutButton">
-				<button onClick={handleLogout}>Logout</button>
+				<button onClick={handleLogout} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Logout</button>
 			</div>
 		</div>
 	);

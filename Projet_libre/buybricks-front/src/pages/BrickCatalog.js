@@ -94,27 +94,34 @@ const BrickCatalog = () => {
 	return (
 		<div className="brickCatalog">
 			<div className="pageTitleWrapper">
-				<p className="pageTitle"> Catalog </p>
+				<p class="font-medium leading-tight text-5xl mt-0 mb-2 text-black-600"> Catalog </p>
 			</div>
-			<div className="catalogFilterWrapper">
-				<p className="seqTitle">Filter</p>
-				<div className="filterFormWrapper">
-					<form onSubmit={handleFilterByName}>
-						<label htmlFor="nameFilter">Name</label>
+			<div class="flex flex-col">
+				<p class="font-medium leading-tight text-4xl mt-0 mb-2 text-black-600">Filter</p>
+				<div class="flex flex-col">
+					<form onSubmit={handleFilterByName} class="bg-white shadow-md rounded px-8 pt-6 pb-8">
+					<div class="mb-4">
+						<label htmlFor="nameFilter" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
 						<input
+							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="text"
 							id="nameFilter"
 							name="nameFilter"
 							required
 						/>
-						<input type="submit" value="Search by name" />
+						</div>
+					<div class="flex items-center justify-between">
+						<input type="submit" value="Search by name" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
+					</div>
 					</form>
 				</div>
 
-				<div className="filterFormWrapper flex flex-col grid place-items-center h-screen">
-					<form onSubmit={handleFilterByDim}>
+				<div className="filterFormWrapper">
+					<form onSubmit={handleFilterByDim} class="bg-white shadow-md rounded px-8 pt-6 pb-8">
 						<label htmlFor="dimFilter">Dimension</label>
+						<div class="mb-4">
 						<input
+							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="number"
 							min="0"
 							max="100"
@@ -122,14 +129,19 @@ const BrickCatalog = () => {
 							name="dimFilter"
 							required
 						/>
-						<input type="submit" value="Search by dimension" />
+						</div>
+						<div class="flex items-center justify-between">
+						<input type="submit" value="Search by dimension" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
+						</div>
 					</form>
 				</div>
 
-				<div className="filterFormWrapper flex flex-col grid place-items-center h-screen">
-					<form onSubmit={handleFilterByPrice}>
+				<div className="filterFormWrapper">
+					<form onSubmit={handleFilterByPrice} class="bg-white shadow-md rounded px-8 pt-6 pb-8">
 						<label htmlFor="priceMinFilter">Minimum price</label>
+						<div class="mb-4">
 						<input
+							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="number"
 							min="0"
 							max="100"
@@ -137,9 +149,12 @@ const BrickCatalog = () => {
 							name="priceMinFilter"
 							required
 						/>
+						</div>
 
 						<label htmlFor="priceMaxFilter">Maximum price</label>
+						<div class="mb-4">
 						<input
+							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							type="number"
 							min="0"
 							max="100"
@@ -147,10 +162,13 @@ const BrickCatalog = () => {
 							name="priceMaxFilter"
 							required
 						/>
-						<input type="submit" value="Search by price" />
+						</div>
+						<div class="flex items-center justify-between">
+						<input type="submit" value="Search by price" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
+						</div>
 					</form>
 				</div>
-				<div id="clearFilterButton">
+				<div id="clearFilterButton" >
 					<button onClick={fetchBricks}>Clear filters</button>
 				</div>
 			</div>
