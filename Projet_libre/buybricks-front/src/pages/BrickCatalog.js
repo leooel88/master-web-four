@@ -177,8 +177,8 @@ const BrickCatalog = () => {
 					{brickList &&
 						brickList.map((brick) => (
 							<div className="brickCardWrapper">
-								<img src='url(https://www.pngmart.com/files/15/Stack-Brick-Transparent-PNG.png)'></img>
 								<li key={brick.id}>
+								<img src='url(https://www.pngmart.com/files/15/Stack-Brick-Transparent-PNG.png)'></img>
 									<Link to={`/brickDetails/${brick.id}`}>
 										{brick.name}
 									</Link>
