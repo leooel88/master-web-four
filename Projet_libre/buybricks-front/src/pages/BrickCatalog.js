@@ -168,15 +168,16 @@ const BrickCatalog = () => {
 						</div>
 					</form>
 				</div>
-				<div id="clearFilterButton" >
-					<button onClick={fetchBricks}>Clear filters</button>
+				<div id="clearFilterButton">
+					<button onClick={fetchBricks} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Clear filters</button>
 				</div>
 			</div>
 			<div className="cardListWrapper">
-				<ul>
+				<ul class="group relative">
 					{brickList &&
 						brickList.map((brick) => (
 							<div className="brickCardWrapper">
+								<img src='url(https://www.pngmart.com/files/15/Stack-Brick-Transparent-PNG.png)'></img>
 								<li key={brick.id}>
 									<Link to={`/brickDetails/${brick.id}`}>
 										{brick.name}
