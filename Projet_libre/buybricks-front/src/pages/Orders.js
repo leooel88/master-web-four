@@ -35,10 +35,7 @@ const Orders = () => {
 				{orderList &&
 					orderList.map((order) => (
 						<li key={order.id}>
-							<div
-								class="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-								className="orderWrapper"
-							>
+							<div className="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
 								<div class="flex flex-col justify-between p-4 leading-normal">
 									<p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
 										Order id : {order.id}

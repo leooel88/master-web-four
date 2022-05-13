@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const BrickDetails = () => {
+	const navigate = useNavigate();
 	const { brickId } = useParams();
 	const [brickDetails, setBrickDetails] = React.useState('');
 	const [basketId, setBasketId] = React.useState('');
@@ -30,18 +31,12 @@ const BrickDetails = () => {
 					// },
 				}
 			);
+			console.log(result);
 		} catch (error) {
 			console.log(error);
 		}
 
 		setBasketId(result.data.basket.data.id);
-		setMaximumProductNb(
-			Math.min(
-				500 - result.data.basket.data.productNb,
-				brickDetails.quantity
-			)
-		);
-
 		console.log(result.data.basket.data);
 		return result;
 	};
@@ -80,10 +75,14 @@ const BrickDetails = () => {
 			// },
 		});
 		console.log(result);
+		navigate('/basket');
 	};
 
 	const handleAddBrick = async (event) => {
 		event.preventDefault();
+		if (!localStorage.getItem('authToken')) {
+			navigate('/login');
+		}
 		const addBrickJson = {
 			brick_id: brickId,
 			brick_quantity: event.target.brickNb.value,
@@ -92,9 +91,11 @@ const BrickDetails = () => {
 	};
 
 	return (
-		<div className="brickDetails">
-			<div className="brickDetails-name">
-				<p className="title product-title">{brickDetails.name}</p>
+		<div className="brickDetails block p-6 text-white mx-10 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+			<div className="flex justify-center brickDetails-name">
+				<p class="text-xl" className="title w-min product-title">
+					{brickDetails.name}
+				</p>
 			</div>
 			<div className="brickDetails-image"></div>
 			<div className="brickDetails-price">
@@ -116,6 +117,7 @@ const BrickDetails = () => {
 			<form onSubmit={handleAddBrick} onChange={handleChangeBrickNb}>
 				<label htmlFor="brickNb">Brick number</label>
 				<input
+					className="shadow appearance-none border rounded w-full h-4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					type="number"
 					id="brickNb"
 					name="brickNb"
@@ -129,7 +131,11 @@ const BrickDetails = () => {
 					Total price : {totalPrice} euros.
 				</p>
 
-				<input type="submit" value="Add to basket" />
+				<input
+					className="bg-blue-500 hover:bg-blue-700 text-white font-bold h-7 px-4 rounded focus:outline-none focus:shadow-outline"
+					type="submit"
+					value="Add to basket"
+				/>
 			</form>
 		</div>
 	);

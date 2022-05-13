@@ -92,98 +92,137 @@ const BrickCatalog = () => {
 	};
 
 	return (
-		<div className="brickCatalog">
+		<div className="flex flex-col items-center brickCatalog">
 			<div className="pageTitleWrapper">
-				<p class="font-medium leading-tight text-5xl mt-0 mb-2 text-black-600"> Catalog </p>
+				<p className="font-medium leading-tight text-5xl mt-0 mb-2 text-black-600">
+					{' '}
+					Catalog{' '}
+				</p>
 			</div>
-			<div class="flex flex-col">
-				<p class="font-medium leading-tight text-4xl mt-0 mb-2 text-black-600">Filter</p>
-				<div class="flex flex-col">
-					<form onSubmit={handleFilterByName} class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-					<div class="mb-4">
-						<label htmlFor="nameFilter" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
-						<input
-							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-							type="text"
-							id="nameFilter"
-							name="nameFilter"
-							required
-						/>
+			<div className="flex flex-row items-center justify-center">
+				<p className="font-medium leading-tight text-4xl mt-0 mb-2 text-black-600">
+					Filter
+				</p>
+				<div className="flex flex-col">
+					<form
+						onSubmit={handleFilterByName}
+						className="bg-white shadow-md rounded px-3 pt-3 pb-3 mx-3"
+					>
+						<div className="mb-4">
+							<label
+								htmlFor="nameFilter"
+								className="block text-gray-700 text-sm font-bold mb-2"
+							>
+								Name
+							</label>
+							<input
+								className="shadow appearance-none border rounded w-full h-4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+								type="text"
+								id="nameFilter"
+								name="nameFilter"
+								required
+							/>
 						</div>
-					<div class="flex items-center justify-between">
-						<input type="submit" value="Search by name" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
-					</div>
+						<div className="flex items-center justify-between">
+							<input
+								type="submit"
+								value="Search by name"
+								className="bg-blue-500 hover:bg-blue-700 text-white font-bold h-7 px-4 rounded focus:outline-none focus:shadow-outline"
+							/>
+						</div>
 					</form>
 				</div>
 
 				<div className="filterFormWrapper">
-					<form onSubmit={handleFilterByDim} class="bg-white shadow-md rounded px-8 pt-6 pb-8">
+					<form
+						onSubmit={handleFilterByDim}
+						className="bg-white shadow-md rounded px-3 pt-3 pb-3 mx-3"
+					>
 						<label htmlFor="dimFilter">Dimension</label>
-						<div class="mb-4">
-						<input
-							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-							type="number"
-							min="0"
-							max="100"
-							id="dimFilter"
-							name="dimFilter"
-							required
-						/>
+						<div className="mb-4">
+							<input
+								className="shadow appearance-none border rounded w-full h-4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+								type="number"
+								min="0"
+								max="100"
+								id="dimFilter"
+								name="dimFilter"
+								required
+							/>
 						</div>
-						<div class="flex items-center justify-between">
-						<input type="submit" value="Search by dimension" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
+						<div className="flex items-center justify-between">
+							<input
+								type="submit"
+								value="Search by dimension"
+								className="bg-blue-500 hover:bg-blue-700 text-white font-bold h-7 px-4 rounded focus:outline-none focus:shadow-outline"
+							/>
 						</div>
 					</form>
 				</div>
 
 				<div className="filterFormWrapper">
-					<form onSubmit={handleFilterByPrice} class="bg-white shadow-md rounded px-8 pt-6 pb-8">
+					<form
+						onSubmit={handleFilterByPrice}
+						className="bg-white shadow-md rounded px-3 pt-3 pb-3 mx-3"
+					>
 						<label htmlFor="priceMinFilter">Minimum price</label>
-						<div class="mb-4">
-						<input
-							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-							type="number"
-							min="0"
-							max="100"
-							id="priceMinFilter"
-							name="priceMinFilter"
-							required
-						/>
+						<div className="mb-4">
+							<input
+								className="shadow appearance-none border rounded w-full h-4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+								type="number"
+								min="0"
+								max="100"
+								id="priceMinFilter"
+								name="priceMinFilter"
+								required
+							/>
 						</div>
 
 						<label htmlFor="priceMaxFilter">Maximum price</label>
-						<div class="mb-4">
-						<input
-							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-							type="number"
-							min="0"
-							max="100"
-							id="priceMaxFilter"
-							name="priceMaxFilter"
-							required
-						/>
+						<div className="mb-4">
+							<input
+								className="shadow appearance-none border rounded w-full h-4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+								type="number"
+								min="0"
+								max="100"
+								id="priceMaxFilter"
+								name="priceMaxFilter"
+								required
+							/>
 						</div>
-						<div class="flex items-center justify-between">
-						<input type="submit" value="Search by price" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"/>
+						<div className="flex items-center justify-between">
+							<input
+								type="submit"
+								value="Search by price"
+								className="bg-blue-500 hover:bg-blue-700 text-white font-bold h-7 px-4 rounded focus:outline-none focus:shadow-outline"
+							/>
 						</div>
 					</form>
 				</div>
 				<div id="clearFilterButton">
-					<button onClick={fetchBricks} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Clear filters</button>
+					<button
+						onClick={fetchBricks}
+						className="bg-blue-500 hover:bg-blue-700 text-white font-bold h-7 px-4 rounded focus:outline-none focus:shadow-outline"
+					>
+						Clear filters
+					</button>
 				</div>
 			</div>
 			<div className="cardListWrapper">
-				<ul class="group relative">
+				<ul className="grid grid-cols-4 gap-4 mx-3">
 					{brickList &&
 						brickList.map((brick) => (
-							<div className="brickCardWrapper">
-								<li key={brick.id}>
-								<img src='url(https://www.pngmart.com/files/15/Stack-Brick-Transparent-PNG.png)'></img>
-									<Link to={`/brickDetails/${brick.id}`}>
+							<li key={brick.id}>
+								<Link
+									className="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+									to={`/brickDetails/${brick.id}`}
+								>
+									<img src="https://www.pngmart.com/files/15/Stack-Brick-Transparent-PNG.png"></img>
+									<p className="min-w-fit px-20 justify-self-center text-center text-white">
 										{brick.name}
-									</Link>
-								</li>
-							</div>
+									</p>
+								</Link>
+							</li>
 						))}
 				</ul>
 			</div>

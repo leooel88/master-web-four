@@ -116,20 +116,28 @@ const Basket = () => {
 	return (
 		<div class="bg-[#AAAAAA]">
 			<div className="basket-name">
-				<p class="font-medium leading-tight text-5xl mt-0 mb-2 text-black-600">Your basket</p>
+				<p class="font-medium leading-tight text-5xl mt-0 mb-2 text-black-600">
+					Your basket
+				</p>
 			</div>
 			<div className="basket-content">
 				<ul>
 					{basketBrickList &&
 						basketBrickList.map((basketBrick) => (
 							<li key={basketBrick.brick.id}>
-								<Link
-									to={`/brickDetails/${basketBrick.brick.id}`}
-								>
-									{basketBrick.brick.name}
-								</Link>
-								<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">Brick number : {basketBrick.quantity}</p>
-								<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">Price : {basketBrick.price}</p>
+								<div class="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+									<Link
+										to={`/brickDetails/${basketBrick.brick.id}`}
+									>
+										{basketBrick.brick.name}
+									</Link>
+									<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">
+										Brick number : {basketBrick.quantity}
+									</p>
+									<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">
+										Price : {basketBrick.price}
+									</p>
+								</div>
 							</li>
 						))}
 				</ul>
@@ -137,18 +145,32 @@ const Basket = () => {
 			<div className="basketDetails">
 				<div className="basket-image"></div>
 				<div className="basket-totalprice">
-					<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">Prix total : {basket.totalPrice} euros.</p>
+					<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">
+						Prix total : {basket.totalPrice} euros.
+					</p>
 					<br></br>
 				</div>
 				<div className="basket-productnb">
-					<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">Nombre de produit : {basket.productNb}</p>
+					<p class="font-medium leading-tight text-3xl mt-0 mb-2 text-black-600">
+						Nombre de produit : {basket.productNb}
+					</p>
 					<br></br>
 				</div>
 				<div className="orderBasketButton">
-					<button onClick={handlerOrderBasket} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Order basket</button>
+					<button
+						onClick={handlerOrderBasket}
+						class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+					>
+						Order basket
+					</button>
 				</div>
 				<div className="emptyBasketButtonWrapper">
-					<button onClick={handleEmptyBasket} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Empty basket</button>
+					<button
+						onClick={handleEmptyBasket}
+						class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+					>
+						Empty basket
+					</button>
 				</div>
 			</div>
 		</div>
